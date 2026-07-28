@@ -4,21 +4,22 @@ A private luxury jewelry collection and client experience platform.
 
 ## Live Prototype
 
-The private storefront prototype is live:
-
 **[Open Vida Collection by Alé](https://vida-collection-ale.djwiseguy.chatgpt.site)**
+
+**[Open the private Collection Manager](https://vida-collection-ale.djwiseguy.chatgpt.site/admin)**
 
 > Access is currently limited to the owner while the collection is in development.
 
 ## Current Experience
 
 - Editorial luxury landing page
-- Three concept collection pieces
+- Three seeded concept collection pieces
 - Dedicated product page for **The Vida Ring — VIDA 001**
+- Persistent private collection manager
+- Add and edit jewelry pieces
+- Publish or hide pieces without rebuilding the site
+- Pricing, status, materials, story, and display-order controls
 - One-of-One piece identification
-- Gemstone and 14K gold details
-- Concept pricing and availability presentation
-- Piece story, specifications, and provenance experience
 - Responsive desktop and mobile layouts
 - Private client inquiry experience
 
@@ -28,12 +29,12 @@ Vida Collection by Alé focuses on one-of-one and limited-production fine jewelr
 
 ## Future App Goals
 
-- Additional individual product pages
-- Live pricing and availability
+- Upload original jewelry photography
+- Additional dynamic product pages
 - Inquiry delivery to a real inbox
 - Client accounts
 - Custom-piece requests
-- Collection management tools
+- Expanded collection analytics
 
 ## Brand
 
@@ -54,7 +55,7 @@ Private fine jewelry centered on one-of-one and limited-production pieces.
 
 ## Current Status
 
-Private prototype complete. Collection and client workflow development in progress.
+Private storefront, product page, and persistent collection manager are live. Collection and client workflow development remain in progress.
 
 Vida Collection by Alé  
 Fine Jewelry • One of One • San Antonio, Texas
