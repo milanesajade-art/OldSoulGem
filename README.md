@@ -18,6 +18,8 @@ designed around distinctive gemstones, sculptural goldwork, and personal storyte
 - Future client accounts and custom-piece requests
 
 ## Brand
+## Current Status
 
+Early development and collection planning.
 Vida Collection by Alé
 Fine Jewelry • One of One • San Antonio, Texas
