@@ -18,7 +18,6 @@ designed around distinctive gemstones, sculptural goldwork, and personal storyte
 - Future client accounts and custom-piece requests
 
 ## Brand
-## Brand
 
 **Vida Collection by Alé**
 
