@@ -27,7 +27,7 @@ jobs:
           EVENT_PATH: ${{ github.event_path }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, sys
+          import json, os, pathlib, re, time
 
           marker = '<!-- VIDA_CREATOR_PUBLISH_V3 -->'
           event = json.load(open(os.environ['EVENT_PATH'], encoding='utf-8'))
@@ -40,19 +40,16 @@ jobs:
           if marker not in body:
               raise SystemExit('Missing Vida Creator publish marker.')
 
-          raw = body.split(marker, 1)[1].strip()
-          data = json.loads(raw)
+          data = json.loads(body.split(marker, 1)[1].strip())
           pieces = data.get('pieces')
           site = data.get('site')
-
           if not isinstance(pieces, list) or not pieces:
               raise SystemExit('Publish package must contain collection pieces.')
           if not isinstance(site, dict):
               raise SystemExit('Publish package must contain site content.')
 
           allowed_piece = {'id','name','status','visibility','price','materials','story','image'}
-          clean_pieces = []
-          seen = set()
+          clean_pieces, seen = [], set()
           for p in pieces:
               if not isinstance(p, dict):
                   raise SystemExit('Invalid piece record.')
@@ -68,17 +65,24 @@ jobs:
           allowed_site = {'eyebrow','heroTitle','heroLede','primaryCta','secondaryCta','atelierTitle','atelierBody','collectionTitle','collectionBody','storyTitle','storyLead','storyBody','inquiryTitle','inquiryBody','availability'}
           clean_site = {k: str(site.get(k, '')) for k in allowed_site}
 
-          collection_js = 'window.VIDA_COLLECTION_DEFAULTS = ' + json.dumps(clean_pieces, ensure_ascii=False, indent=2) + ';\n'
-          site_js = 'window.VIDA_SITE_DEFAULTS = ' + json.dumps(clean_site, ensure_ascii=False, indent=2) + ';\n'
-          pathlib.Path('collection-data.js').write_text(collection_js, encoding='utf-8')
-          pathlib.Path('site-data.js').write_text(site_js, encoding='utf-8')
+          pathlib.Path('collection-data.js').write_text('window.VIDA_COLLECTION_DEFAULTS = ' + json.dumps(clean_pieces, ensure_ascii=False, indent=2) + ';\n', encoding='utf-8')
+          pathlib.Path('site-data.js').write_text('window.VIDA_SITE_DEFAULTS = ' + json.dumps(clean_site, ensure_ascii=False, indent=2) + ';\n', encoding='utf-8')
+
+          stamp = str(int(time.time()))
+          for filename in ('index.html','product.html','creator.html'):
+              path = pathlib.Path(filename)
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              text = re.sub(r'\?v=\d+', '?v=' + stamp, text)
+              path.write_text(text, encoding='utf-8')
           PY
 
       - name: Commit production data
         run: |
           git config user.name "Vida Creator Publisher"
           git config user.email "actions@users.noreply.github.com"
-          git add collection-data.js site-data.js
+          git add collection-data.js site-data.js index.html product.html creator.html
           if git diff --cached --quiet; then
             echo "No production changes to commit."
           else
