@@ -1,0 +1,95 @@
+name: Publish Vida Creator Changes
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: vida-creator-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.issue.user.login == 'milanesajade-art' && contains(github.event.issue.body, '<!-- VIDA_CREATOR_PUBLISH_V3 -->')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Validate and build production data
+        env:
+          EVENT_PATH: ${{ github.event_path }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, sys
+
+          marker = '<!-- VIDA_CREATOR_PUBLISH_V3 -->'
+          event = json.load(open(os.environ['EVENT_PATH'], encoding='utf-8'))
+          issue = event.get('issue') or {}
+          actor = (issue.get('user') or {}).get('login')
+          if actor != 'milanesajade-art':
+              raise SystemExit('Only the repository owner can publish Creator changes.')
+
+          body = issue.get('body') or ''
+          if marker not in body:
+              raise SystemExit('Missing Vida Creator publish marker.')
+
+          raw = body.split(marker, 1)[1].strip()
+          data = json.loads(raw)
+          pieces = data.get('pieces')
+          site = data.get('site')
+
+          if not isinstance(pieces, list) or not pieces:
+              raise SystemExit('Publish package must contain collection pieces.')
+          if not isinstance(site, dict):
+              raise SystemExit('Publish package must contain site content.')
+
+          allowed_piece = {'id','name','status','visibility','price','materials','story','image'}
+          clean_pieces = []
+          seen = set()
+          for p in pieces:
+              if not isinstance(p, dict):
+                  raise SystemExit('Invalid piece record.')
+              q = {k: str(p.get(k, '')) for k in allowed_piece}
+              q['visibility'] = 'hidden' if q['visibility'] == 'hidden' else 'public'
+              if not q['id'].startswith('VIDA ') or q['id'] in seen:
+                  raise SystemExit('Invalid or duplicate VIDA ID.')
+              if not q['name'].strip():
+                  raise SystemExit(f"{q['id']} is missing a name.")
+              seen.add(q['id'])
+              clean_pieces.append(q)
+
+          allowed_site = {'eyebrow','heroTitle','heroLede','primaryCta','secondaryCta','atelierTitle','atelierBody','collectionTitle','collectionBody','storyTitle','storyLead','storyBody','inquiryTitle','inquiryBody','availability'}
+          clean_site = {k: str(site.get(k, '')) for k in allowed_site}
+
+          collection_js = 'window.VIDA_COLLECTION_DEFAULTS = ' + json.dumps(clean_pieces, ensure_ascii=False, indent=2) + ';\n'
+          site_js = 'window.VIDA_SITE_DEFAULTS = ' + json.dumps(clean_site, ensure_ascii=False, indent=2) + ';\n'
+          pathlib.Path('collection-data.js').write_text(collection_js, encoding='utf-8')
+          pathlib.Path('site-data.js').write_text(site_js, encoding='utf-8')
+          PY
+
+      - name: Commit production data
+        run: |
+          git config user.name "Vida Creator Publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add collection-data.js site-data.js
+          if git diff --cached --quiet; then
+            echo "No production changes to commit."
+          else
+            git commit -m "Publish Creator changes from GitHub-authenticated request"
+            git push origin HEAD:main
+          fi
+
+      - name: Confirm and close publish request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body "Vida Creator changes were validated and published to main. GitHub Pages deployment has been triggered."
+          gh issue close "$ISSUE_NUMBER"
