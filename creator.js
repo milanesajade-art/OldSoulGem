@@ -1,46 +1,196 @@
-const defaults=Array.isArray(window.VIDA_COLLECTION_DEFAULTS)?window.VIDA_COLLECTION_DEFAULTS:[];
-const siteDefaults=window.VIDA_SITE_DEFAULTS||{};
-const draftKey='vida_creator_pieces_v1';
-const publishKey='vida_published_collection_v1';
-const siteDraftKey='vida_site_draft_v1';
-const sitePublishKey='vida_published_site_v1';
-const inquiryKey='vida_inquiries';
-const githubSessionKey='vida_github_token_session';
-const githubRepo='milanesajade-art/ale-jewelry';
-const githubBranch='main';
-const mediaAssets=['','assets/floral-opal-ring.svg','assets/orbit-opal-ring.svg','assets/braided-gold-band.svg'];
-const readJson=(key)=>{try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null}};
-let pieces=readJson(draftKey)||JSON.parse(JSON.stringify(defaults));
-let active=pieces[0]?.id;
-const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
-function save(){localStorage.setItem(draftKey,JSON.stringify(pieces));}
-function esc(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-function normalizeImageUrl(value=''){const raw=String(value||'').trim();if(!raw)return'';if(!raw.includes('drive.google.com'))return raw;const match=raw.match(/\/file\/d\/([^/]+)/)||raw.match(/[?&]id=([^&]+)/)||raw.match(/\/d\/([^/]+)/);return match?.[1]?`https://drive.google.com/thumbnail?id=${encodeURIComponent(match[1])}&sz=w1600`:raw;}
-function nextId(){const n=Math.max(0,...pieces.map(p=>parseInt(String(p.id).replace(/\D/g,''),10)||0))+1;return`VIDA ${String(n).padStart(3,'0')}`;}
-function renderStats(){const locked=pieces.filter(p=>p.status==='Locked').length;const review=pieces.filter(p=>p.status==='Designer Review').length;$('#statPieces').textContent=pieces.length;$('#statLocked').textContent=locked;$('#statReview').textContent=review;$('#statInquiries').textContent=(readJson(inquiryKey)||[]).length;}
-function renderList(){const list=$('#creatorPieceList');list.innerHTML=pieces.map(p=>`<article class="creator-piece ${p.id===active?'selected':''}" data-id="${esc(p.id)}"><div class="creator-thumb">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}">`:'<div class="creator-no-image">NO IMAGE</div>'}</div><div><h3>${esc(p.name)}</h3><p>${esc(p.id)} • ${esc(p.price)}</p><p>${esc(p.materials)}</p></div><span class="creator-status">${esc(p.status)}</span></article>`).join('');$$('.creator-piece').forEach(el=>el.onclick=()=>{active=el.dataset.id;renderList();renderEditor();});}
-function populateImageSelect(value=''){const select=$('#pieceImage');const libraryValue=mediaAssets.includes(value)?value:'';select.innerHTML=mediaAssets.map(a=>`<option value="${esc(a)}" ${a===libraryValue?'selected':''}>${a||'No library image'}</option>`).join('');}
-function validatePiece(p){const issues=[];if(!p.name?.trim())issues.push('Name is required.');if(!p.materials?.trim())issues.push('Materials are missing.');if(!p.story?.trim())issues.push('Story is missing.');if(!p.price?.trim())issues.push('Price or availability is missing.');if(!p.image&&p.status!=='Hidden'&&p.id!=='VIDA 001'&&p.id!=='VIDA 002')issues.push('No primary image assigned.');return issues;}
-function renderValidation(p){const issues=validatePiece(p);$('#validationBox').innerHTML=issues.length?`<strong>Needs attention</strong><ul>${issues.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'<strong class="ok">Ready for preview.</strong>';}
-function renderEditor(){const p=pieces.find(x=>x.id===active)||pieces[0];if(!p)return;$('#pieceId').value=p.id;$('#pieceName').value=p.name;$('#pieceStatus').value=p.status;$('#piecePrice').value=p.price;$('#pieceMaterials').value=p.materials;populateImageSelect(p.image||'');$('#pieceImageUrl').value=p.image&&!mediaAssets.includes(p.image)?p.image:'';$('#pieceStory').value=p.story;$('#editorTitle').textContent=p.name;$('#editorMeta').textContent=`${p.id} • ${p.status}`;renderValidation(p);}
-function renderMedia(){const used=new Set(pieces.map(p=>p.image).filter(Boolean));$('#mediaGrid').innerHTML=mediaAssets.filter(Boolean).map(src=>`<article class="creator-media-card"><img src="${esc(src)}" alt="Vida media asset"><div class="creator-media-copy"><strong>${src.split('/').pop()}</strong><span>${used.has(src)?'Assigned to collection':'Available'}</span><button class="creator-btn media-assign" data-src="${esc(src)}" type="button">Assign to selected piece</button></div></article>`).join('');$$('.media-assign').forEach(btn=>btn.onclick=()=>{const p=pieces.find(x=>x.id===active);if(!p)return;p.image=btn.dataset.src;save();renderAll();flash('#saveNote','Image assigned and draft saved.');});}
-function renderInquiries(){const inquiries=readJson(inquiryKey)||[];$('#inquiryRows').innerHTML=inquiries.length?inquiries.map((i,idx)=>`<tr><td>${esc(i.name||'—')}</td><td>${esc(i.interest||'—')}</td><td>${esc(i.email||'—')}</td><td><select class="inquiry-status" data-index="${idx}"><option ${i.status==='New'?'selected':''}>New</option><option ${i.status==='Contacted'?'selected':''}>Contacted</option><option ${i.status==='Appointment'?'selected':''}>Appointment</option><option ${i.status==='Closed'?'selected':''}>Closed</option></select></td><td>${i.createdAt?new Date(i.createdAt).toLocaleDateString():'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="creator-muted">No saved inquiries yet.</td></tr>';$$('.inquiry-status').forEach(s=>s.onchange=()=>{const data=readJson(inquiryKey)||[];if(data[s.dataset.index])data[s.dataset.index].status=s.value;localStorage.setItem(inquiryKey,JSON.stringify(data));renderStats();});}
-function flash(id,msg){const el=$(id);if(!el)return;el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},5000);}
-function syncForm(){const p=pieces.find(x=>x.id===active);if(!p)return null;p.name=$('#pieceName').value.trim();p.status=$('#pieceStatus').value;p.price=$('#piecePrice').value.trim();p.materials=$('#pieceMaterials').value.trim();const external=normalizeImageUrl($('#pieceImageUrl').value);p.image=external||$('#pieceImage').value;if(external)$('#pieceImageUrl').value=external;p.story=$('#pieceStory').value.trim();return p;}
-function writeCollectionPreview(){const version=Date.now();const publishedAt=new Date().toISOString();localStorage.setItem(publishKey,JSON.stringify({version,publishedAt,pieces:JSON.parse(JSON.stringify(pieces))}));return{version,publishedAt};}
-function previewPiece(){const p=syncForm();if(!p)return;save();writeCollectionPreview();renderAll();window.open(`product.html?id=${encodeURIComponent(p.id)}`,'vida-piece-preview');}
-function publishPreview(){syncForm();save();const issues=pieces.flatMap(p=>validatePiece(p).map(issue=>`${p.id}: ${issue}`));const {version,publishedAt}=writeCollectionPreview();const site=readJson(siteDraftKey)||JSON.parse(JSON.stringify(siteDefaults));if(site&&Object.keys(site).length)localStorage.setItem(sitePublishKey,JSON.stringify({version,publishedAt,site:JSON.parse(JSON.stringify(site))}));flash('#publishNote',issues.length?`Published with ${issues.length} warning${issues.length===1?'':'s'} — opening storefront.`:'Collection and site changes published — opening storefront.');$('#launchPreviewState').textContent='ACTIVE';renderAll();setTimeout(()=>window.open(`index.html?creatorPublish=${version}`,'vida-storefront'),150);}
-function utf8Base64(value){const bytes=new TextEncoder().encode(value);let binary='';for(const byte of bytes)binary+=String.fromCharCode(byte);return btoa(binary);}
-function githubToken(){return ($('#githubToken')?.value||sessionStorage.getItem(githubSessionKey)||'').trim();}
-function saveGithubSession(){const token=($('#githubToken')?.value||'').trim();if(!token){sessionStorage.removeItem(githubSessionKey);if($('#livePublishState'))$('#livePublishState').textContent='SETUP';flash('#livePublishNote','Session token cleared.');return}sessionStorage.setItem(githubSessionKey,token);if($('#livePublishState'))$('#livePublishState').textContent='CONNECTED';flash('#livePublishNote','GitHub token is available for this browser session only.');}
-async function githubRequest(path,options={}){const token=githubToken();if(!token)throw new Error('Enter a fine-grained GitHub token first.');const response=await fetch(`https://api.github.com/repos/${githubRepo}/contents/${path}${options.method?'':`?ref=${encodeURIComponent(githubBranch)}`}`,{...options,headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json',...(options.headers||{})}});let body=null;try{body=await response.json()}catch{}if(!response.ok)throw new Error(body?.message||`GitHub request failed (${response.status}).`);return body;}
-async function commitDataFile(path,source,message){const current=await githubRequest(path);return githubRequest(path,{method:'PUT',body:JSON.stringify({message,content:utf8Base64(source),sha:current.sha,branch:githubBranch})});}
-async function publishLive(){const button=$('#publishLive');const note=$('#livePublishNote');try{syncForm();save();saveGithubSession();const token=githubToken();if(!token)throw new Error('Enter a fine-grained GitHub token first.');button.disabled=true;button.textContent='Publishing…';if(note)note.textContent='Committing collection data to GitHub…';const publishedAt=new Date().toISOString();const site=readJson(siteDraftKey)||JSON.parse(JSON.stringify(siteDefaults));const collectionSource=`window.VIDA_COLLECTION_DEFAULTS=${JSON.stringify(pieces,null,2)};\nwindow.VIDA_COLLECTION_UPDATED_AT=${JSON.stringify(publishedAt)};\n`;const siteSource=`window.VIDA_SITE_DEFAULTS=${JSON.stringify(site,null,2)};\nwindow.VIDA_SITE_UPDATED_AT=${JSON.stringify(publishedAt)};\n`;await commitDataFile('collection-data.js',collectionSource,'Publish Vida collection from Creator Studio');if(note)note.textContent='Collection committed. Publishing site content…';await commitDataFile('site-data.js',siteSource,'Publish Vida site content from Creator Studio');const version=Date.now();localStorage.setItem(publishKey,JSON.stringify({version,publishedAt,pieces:JSON.parse(JSON.stringify(pieces))}));localStorage.setItem(sitePublishKey,JSON.stringify({version,publishedAt,site:JSON.parse(JSON.stringify(site))}));if($('#livePublishState'))$('#livePublishState').textContent='DEPLOYING';if(note)note.textContent='Live data committed. GitHub Pages deployment has been triggered. Open the storefront after the workflow finishes.';setTimeout(()=>window.open(`index.html?livePublish=${version}`,'vida-storefront'),600);}catch(error){if($('#livePublishState'))$('#livePublishState').textContent='ERROR';if(note)note.textContent=error.message||'Live publish failed.';}finally{button.disabled=false;button.textContent='Publish Live';}}
-function addPiece(){const id=nextId();pieces.push({id,name:'Untitled Piece',status:'Designer Review',price:'Private',materials:'14K yellow gold',story:'',image:''});active=id;save();renderAll();flash('#saveNote',`${id} added as a draft.`);}
-function duplicatePiece(){const source=pieces.find(p=>p.id===active);if(!source)return;const copy=JSON.parse(JSON.stringify(source));copy.id=nextId();copy.name=`${source.name} Study`;copy.status='Designer Review';pieces.push(copy);active=copy.id;save();renderAll();flash('#saveNote',`${copy.id} duplicated from ${source.id}.`);}
-function deletePiece(){const idx=pieces.findIndex(p=>p.id===active);if(idx<0)return;const removed=pieces[idx];pieces.splice(idx,1);active=pieces[Math.max(0,idx-1)]?.id||pieces[0]?.id;save();renderAll();flash('#saveNote',`${removed.id} removed from drafts.`);}
-function exportDrafts(){const site=readJson(siteDraftKey)||siteDefaults;const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),pieces,site},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='vida-creator-drafts.json';a.click();URL.revokeObjectURL(url);flash('#briefNote','Collection and site draft JSON exported.');}
-function bind(){$$('.creator-nav button').forEach(btn=>btn.onclick=()=>{$$('.creator-nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');$$('.creator-view').forEach(v=>v.classList.remove('active'));$(`#view-${btn.dataset.view}`).classList.add('active');if(btn.dataset.view==='inquiries')renderInquiries();if(btn.dataset.view==='media')renderMedia();});$('#pieceForm').addEventListener('submit',e=>{e.preventDefault();const p=syncForm();if(!p)return;save();renderList();renderStats();renderValidation(p);flash('#saveNote','Draft saved on this device.');});['pieceName','pieceStatus','piecePrice','pieceMaterials','pieceImage','pieceImageUrl','pieceStory'].forEach(id=>{$(`#${id}`).addEventListener('input',()=>{const p=syncForm();if(p)renderValidation(p);});});$('#previewPiece').onclick=previewPiece;$('#publishPreview').onclick=publishPreview;$('#saveGithubSession').onclick=saveGithubSession;$('#publishLive').onclick=publishLive;$('#addPiece').onclick=addPiece;$('#duplicatePiece').onclick=duplicatePiece;$('#deletePiece').onclick=deletePiece;$('#exportDrafts').onclick=exportDrafts;$('#resetDrafts').onclick=()=>{pieces=JSON.parse(JSON.stringify(defaults));active=pieces[0]?.id;save();renderAll();flash('#saveNote','Drafts reset to repository defaults.');};$('#clearInquiries').onclick=()=>{localStorage.removeItem(inquiryKey);renderInquiries();renderStats();};$('#copyBrief').onclick=async()=>{const site=readJson(siteDraftKey)||siteDefaults;const text='Vida Creator Studio draft changes:\n\n'+pieces.map(p=>`${p.id} — ${p.name}\nStatus: ${p.status}\nPrice: ${p.price}\nMaterials: ${p.materials}\nImage: ${p.image||'none'}\nStory: ${p.story}\nWarnings: ${validatePiece(p).join(' | ')||'none'}`).join('\n\n')+'\n\nSITE CONTENT\n'+JSON.stringify(site,null,2);try{await navigator.clipboard.writeText(text);flash('#briefNote','Change brief copied.');}catch{flash('#briefNote','Copy failed in this browser.');}};}
-function renderAll(){renderStats();renderList();renderEditor();renderMedia();renderInquiries();const launch=$('#launchPreviewState');if(launch)launch.textContent=(readJson(publishKey)||readJson(sitePublishKey))?'ACTIVE':'NOT PUBLISHED';const token=sessionStorage.getItem(githubSessionKey)||'';const tokenField=$('#githubToken');if(tokenField&&!tokenField.value&&token)tokenField.value=token;if($('#livePublishState'))$('#livePublishState').textContent=token?'CONNECTED':'SETUP';}
-document.addEventListener('DOMContentLoaded',()=>{renderAll();bind();});
+const COLLECTION_DEFAULTS = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? window.VIDA_COLLECTION_DEFAULTS : [];
+const SITE_DEFAULTS = window.VIDA_SITE_DEFAULTS || {};
+const WORKSPACE_KEY = 'vida_creator_workspace_v2';
+const PREVIEW_KEY = 'vida_creator_preview_v2';
+const INQUIRY_KEY = 'vida_inquiries';
+const MEDIA_ASSETS = ['', 'assets/floral-opal-ring.svg', 'assets/orbit-opal-ring.svg', 'assets/braided-gold-band.svg'];
+const SITE_FIELDS = ['eyebrow','heroTitle','heroLede','primaryCta','secondaryCta','atelierTitle','atelierBody','collectionTitle','collectionBody','storyTitle','storyLead','storyBody','inquiryTitle','inquiryBody','availability'];
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const clone = (v) => JSON.parse(JSON.stringify(v));
+const readJson = (key) => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
+const esc = (v='') => String(v).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+function normalizeImageUrl(value='') {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (raw.startsWith('assets/')) return raw;
+  if (!/^https:\/\//i.test(raw)) return '';
+  if (!raw.includes('drive.google.com')) return raw;
+  const match = raw.match(/\/file\/d\/([^/]+)/) || raw.match(/[?&]id=([^&]+)/) || raw.match(/\/d\/([^/]+)/);
+  return match?.[1] ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(match[1])}&sz=w1600` : raw;
+}
+
+function normalizePiece(piece, index=0) {
+  return {
+    id: piece?.id || `VIDA ${String(index + 1).padStart(3,'0')}`,
+    name: piece?.name || 'Untitled Piece',
+    status: piece?.status || 'Designer Review',
+    visibility: piece?.visibility === 'hidden' ? 'hidden' : 'public',
+    price: piece?.price || 'Private',
+    materials: piece?.materials || '14K yellow gold',
+    story: piece?.story || '',
+    image: normalizeImageUrl(piece?.image || '')
+  };
+}
+
+function defaultWorkspace() {
+  return { pieces: COLLECTION_DEFAULTS.map(normalizePiece), site: clone(SITE_DEFAULTS) };
+}
+
+let workspace = readJson(WORKSPACE_KEY) || defaultWorkspace();
+workspace.pieces = Array.isArray(workspace.pieces) ? workspace.pieces.map(normalizePiece) : defaultWorkspace().pieces;
+workspace.site = {...clone(SITE_DEFAULTS), ...(workspace.site || {})};
+let active = workspace.pieces[0]?.id || null;
+
+function saveWorkspace() { localStorage.setItem(WORKSPACE_KEY, JSON.stringify(workspace)); }
+function flash(selector, message) {
+  const el = $(selector); if (!el) return;
+  el.textContent = message;
+  setTimeout(() => { if (el.textContent === message) el.textContent = ''; }, 4500);
+}
+function nextId() {
+  const max = Math.max(0, ...workspace.pieces.map((p) => parseInt(String(p.id).replace(/\D/g,''),10) || 0));
+  return `VIDA ${String(max + 1).padStart(3,'0')}`;
+}
+function activePiece() { return workspace.pieces.find((p) => p.id === active) || workspace.pieces[0] || null; }
+
+function renderStats() {
+  $('#statPieces').textContent = workspace.pieces.length;
+  $('#statPublic').textContent = workspace.pieces.filter((p) => p.visibility === 'public').length;
+  $('#statHidden').textContent = workspace.pieces.filter((p) => p.visibility === 'hidden').length;
+  $('#statInquiries').textContent = (readJson(INQUIRY_KEY) || []).length;
+}
+
+function renderList() {
+  const list = $('#creatorPieceList');
+  list.innerHTML = workspace.pieces.map((p) => `<article class="creator-piece ${p.id === active ? 'selected' : ''}" data-id="${esc(p.id)}"><div class="creator-thumb">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">` : '<div class="creator-no-image">NO IMAGE</div>'}</div><div><h3>${esc(p.name)}</h3><p>${esc(p.id)} • ${esc(p.price)}</p><p>${esc(p.materials)}</p></div><span class="creator-status">${esc(p.visibility === 'hidden' ? 'Hidden' : p.status)}</span></article>`).join('');
+  $$('.creator-piece').forEach((el) => el.onclick = () => { active = el.dataset.id; renderList(); renderEditor(); });
+  $$('.creator-thumb img').forEach((img) => img.addEventListener('error', () => { img.replaceWith(Object.assign(document.createElement('div'), {className:'creator-no-image', textContent:'IMAGE ERROR'})); }, {once:true}));
+}
+
+function populateImageSelect(value='') {
+  const select = $('#pieceImage');
+  const libraryValue = MEDIA_ASSETS.includes(value) ? value : '';
+  select.innerHTML = MEDIA_ASSETS.map((a) => `<option value="${esc(a)}" ${a === libraryValue ? 'selected' : ''}>${a || 'No library image'}</option>`).join('');
+}
+
+function validatePiece(p) {
+  const issues = [];
+  if (!p.name.trim()) issues.push('Name is required.');
+  if (!p.materials.trim()) issues.push('Materials are required.');
+  if (!p.story.trim()) issues.push('Story is required.');
+  if (!p.price.trim()) issues.push('Price or availability is required.');
+  if (p.visibility === 'public' && !p.image && !['VIDA 001','VIDA 002'].includes(p.id)) issues.push('Public piece has no image; storefront will use a branded placeholder.');
+  return issues;
+}
+
+function renderValidation(p) {
+  const issues = validatePiece(p);
+  $('#validationBox').innerHTML = issues.length ? `<strong>Review</strong><ul>${issues.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '<strong class="ok">Ready to preview.</strong>';
+}
+
+function renderEditor() {
+  const p = activePiece(); if (!p) return;
+  $('#pieceId').value = p.id;
+  $('#pieceName').value = p.name;
+  $('#pieceStatus').value = p.status;
+  $('#pieceVisibility').value = p.visibility;
+  $('#piecePrice').value = p.price;
+  $('#pieceMaterials').value = p.materials;
+  populateImageSelect(p.image);
+  $('#pieceImageUrl').value = p.image && !MEDIA_ASSETS.includes(p.image) ? p.image : '';
+  $('#pieceStory').value = p.story;
+  $('#editorTitle').textContent = p.name;
+  $('#editorMeta').textContent = `${p.id} • ${p.visibility === 'hidden' ? 'Hidden' : p.status}`;
+  renderValidation(p);
+}
+
+function syncPieceForm() {
+  const p = activePiece(); if (!p) return null;
+  p.name = $('#pieceName').value.trim();
+  p.status = $('#pieceStatus').value;
+  p.visibility = $('#pieceVisibility').value;
+  p.price = $('#piecePrice').value.trim();
+  p.materials = $('#pieceMaterials').value.trim();
+  const external = normalizeImageUrl($('#pieceImageUrl').value);
+  p.image = external || $('#pieceImage').value;
+  if (external) $('#pieceImageUrl').value = external;
+  p.story = $('#pieceStory').value.trim();
+  return p;
+}
+
+function renderSiteEditor() {
+  SITE_FIELDS.forEach((key) => { const input = $(`[data-site-key="${key}"]`); if (input) input.value = workspace.site[key] || ''; });
+}
+function syncSiteForm() {
+  SITE_FIELDS.forEach((key) => { const input = $(`[data-site-key="${key}"]`); if (input) workspace.site[key] = input.value.trim(); });
+}
+
+function renderMedia() {
+  const used = new Set(workspace.pieces.map((p) => p.image).filter(Boolean));
+  $('#mediaGrid').innerHTML = MEDIA_ASSETS.filter(Boolean).map((src) => `<article class="creator-media-card"><img src="${esc(src)}" alt="Vida media asset"><div class="creator-media-copy"><strong>${esc(src.split('/').pop())}</strong><span>${used.has(src) ? 'Assigned to collection' : 'Available'}</span><button class="creator-btn media-assign" data-src="${esc(src)}" type="button">Assign to selected piece</button></div></article>`).join('');
+  $$('.media-assign').forEach((btn) => btn.onclick = () => { const p = activePiece(); if (!p) return; p.image = btn.dataset.src; saveWorkspace(); renderAll(); flash('#saveNote','Image assigned.'); });
+}
+
+function renderInquiries() {
+  const inquiries = readJson(INQUIRY_KEY) || [];
+  $('#inquiryRows').innerHTML = inquiries.length ? inquiries.map((i, idx) => `<tr><td>${esc(i.name || '—')}</td><td>${esc(i.interest || '—')}</td><td>${esc(i.email || '—')}</td><td><select class="inquiry-status" data-index="${idx}"><option ${i.status === 'New' ? 'selected' : ''}>New</option><option ${i.status === 'Contacted' ? 'selected' : ''}>Contacted</option><option ${i.status === 'Appointment' ? 'selected' : ''}>Appointment</option><option ${i.status === 'Closed' ? 'selected' : ''}>Closed</option></select></td><td>${i.createdAt ? new Date(i.createdAt).toLocaleDateString() : '—'}</td></tr>`).join('') : '<tr><td colspan="5" class="creator-muted">No saved preview inquiries yet.</td></tr>';
+  $$('.inquiry-status').forEach((select) => select.onchange = () => { const data = readJson(INQUIRY_KEY) || []; if (data[select.dataset.index]) data[select.dataset.index].status = select.value; localStorage.setItem(INQUIRY_KEY, JSON.stringify(data)); });
+}
+
+function writePreview() {
+  syncPieceForm(); syncSiteForm(); saveWorkspace();
+  const payload = { version: 2, publishedAt: new Date().toISOString(), pieces: clone(workspace.pieces), site: clone(workspace.site) };
+  localStorage.setItem(PREVIEW_KEY, JSON.stringify(payload));
+  return payload;
+}
+function previewStorefront() { const payload = writePreview(); flash('#previewNote','Preview updated. Opening storefront…'); setTimeout(() => window.open(`index.html?preview=${encodeURIComponent(payload.publishedAt)}`,'vida-storefront'), 120); }
+function previewPiece() { const p = syncPieceForm(); if (!p) return; const payload = writePreview(); setTimeout(() => window.open(`product.html?id=${encodeURIComponent(p.id)}&preview=${encodeURIComponent(payload.publishedAt)}`,'vida-piece-preview'), 120); }
+function clearPreview() { localStorage.removeItem(PREVIEW_KEY); renderReview(); flash('#previewNote','Creator preview cleared. Storefront now uses the repo baseline.'); }
+
+function exportWorkspace() {
+  syncPieceForm(); syncSiteForm(); saveWorkspace();
+  const blob = new Blob([JSON.stringify({exportedAt:new Date().toISOString(), ...workspace}, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'vida-creator-workspace.json'; a.click(); URL.revokeObjectURL(url);
+}
+
+function renderReview() {
+  const preview = readJson(PREVIEW_KEY);
+  $('#previewState').textContent = preview ? 'ACTIVE' : 'CLEAN';
+  $('#previewSummary').textContent = preview ? `Preview saved ${new Date(preview.publishedAt).toLocaleString()}. It affects this browser only.` : 'No Creator preview is active. The storefront is showing the repository baseline.';
+}
+
+function addPiece() {
+  const id = nextId();
+  workspace.pieces.push(normalizePiece({id, name:'Untitled Piece', status:'Designer Review', visibility:'hidden', price:'Private', materials:'14K yellow gold', story:'', image:''}, workspace.pieces.length));
+  active = id; saveWorkspace(); renderAll(); flash('#saveNote',`${id} created hidden by default.`);
+}
+function duplicatePiece() { const source = activePiece(); if (!source) return; const copy = clone(source); copy.id = nextId(); copy.name = `${source.name} Study`; copy.visibility = 'hidden'; workspace.pieces.push(copy); active = copy.id; saveWorkspace(); renderAll(); flash('#saveNote',`${copy.id} duplicated and hidden by default.`); }
+function deletePiece() { const idx = workspace.pieces.findIndex((p) => p.id === active); if (idx < 0) return; const removed = workspace.pieces.splice(idx,1)[0]; active = workspace.pieces[Math.max(0,idx-1)]?.id || workspace.pieces[0]?.id || null; saveWorkspace(); renderAll(); flash('#saveNote',`${removed.id} removed from this workspace.`); }
+function resetWorkspace() { workspace = defaultWorkspace(); active = workspace.pieces[0]?.id || null; localStorage.removeItem(WORKSPACE_KEY); localStorage.removeItem(PREVIEW_KEY); renderAll(); flash('#previewNote','Creator workspace reset to the repository baseline.'); }
+
+function activateView(view) {
+  $$('.creator-nav button[data-view]').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
+  $$('.creator-view').forEach((v) => v.classList.toggle('active', v.id === `view-${view}`));
+  location.hash = view;
+  if (view === 'media') renderMedia(); if (view === 'inquiries') renderInquiries(); if (view === 'review') renderReview();
+}
+
+function bind() {
+  $$('.creator-nav button[data-view]').forEach((btn) => btn.onclick = () => activateView(btn.dataset.view));
+  $('#pieceForm').addEventListener('submit', (e) => { e.preventDefault(); const p = syncPieceForm(); if (!p) return; saveWorkspace(); renderList(); renderStats(); renderValidation(p); flash('#saveNote','Piece draft saved.'); });
+  $('#siteForm').addEventListener('submit', (e) => { e.preventDefault(); syncSiteForm(); saveWorkspace(); flash('#siteNote','Site copy saved.'); });
+  ['pieceName','pieceStatus','pieceVisibility','piecePrice','pieceMaterials','pieceImage','pieceImageUrl','pieceStory'].forEach((id) => $(`#${id}`).addEventListener('input', () => { const p = syncPieceForm(); if (p) renderValidation(p); }));
+  $('#addPiece').onclick = addPiece; $('#duplicatePiece').onclick = duplicatePiece; $('#deletePiece').onclick = deletePiece; $('#previewPiece').onclick = previewPiece;
+  $('#previewStorefront').onclick = previewStorefront; $('#reviewPreview').onclick = previewStorefront; $('#clearPreview').onclick = clearPreview; $('#resetWorkspace').onclick = resetWorkspace; $('#exportWorkspace').onclick = exportWorkspace;
+  $('#clearInquiries').onclick = () => { localStorage.removeItem(INQUIRY_KEY); renderInquiries(); renderStats(); };
+}
+
+function renderAll() { renderStats(); renderList(); renderEditor(); renderSiteEditor(); renderMedia(); renderInquiries(); renderReview(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll(); bind();
+  const requested = location.hash.replace('#','');
+  activateView(['collection','site','media','inquiries','review'].includes(requested) ? requested : 'collection');
+});
