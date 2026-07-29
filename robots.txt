@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://milanesajade-art.github.io/ale-jewelry/sitemap.xml
