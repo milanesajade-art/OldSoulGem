@@ -1,6 +1,15 @@
 [build]
   publish = "."
 
+# Keep the public website visually/functionally aligned with the Vida experience
+# already used by the installed mobile app. Netlify proxies requests to the
+# canonical Vida storefront while preserving the public Netlify URL.
+[[redirects]]
+  from = "/*"
+  to = "https://vida-collection-ale.djwiseguy.chatgpt.site/:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
