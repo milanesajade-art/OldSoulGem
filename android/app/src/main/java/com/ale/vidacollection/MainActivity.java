@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
+    // Keep Android pointed at the canonical Vida storefront so the app and shareable web experience stay aligned.
     private static final String VIDA_URL = "https://vida-collection-ale.djwiseguy.chatgpt.site";
     private WebView webView;
 
