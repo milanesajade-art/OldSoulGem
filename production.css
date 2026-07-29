@@ -32,7 +32,9 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .inquire form:before{content:"VIDA • PRIVATE";position:absolute;right:28px;top:14px;font-size:8px;font-weight:800;letter-spacing:.22em;color:#b58b4b}
 input:focus,select:focus,textarea:focus{outline:2px solid rgba(181,139,75,.28);outline-offset:2px;border-color:#b58b4b}
 footer{background:rgba(251,248,242,.42)}
-@media(min-width:951px){.product-media{position:sticky;top:112px;align-self:start}}
+.creator-preview-bar{position:sticky;top:0;z-index:9999;background:#171411;color:#f7efe5;padding:10px 18px;display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:12px;letter-spacing:.02em;border-bottom:1px solid rgba(255,255,255,.1)}
+.creator-preview-bar strong{color:#d9b46f}.creator-preview-actions{display:flex;gap:10px;align-items:center}.creator-preview-actions a,.creator-preview-actions button{color:#f7efe5;background:transparent;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer}.has-creator-preview .site-header{top:39px}
+@media(min-width:951px){.product-media{position:sticky;top:112px;align-self:start}.has-creator-preview .product-media{top:151px}}
 @media(max-width:950px){
   .site-header{gap:18px;align-items:flex-start}
   nav{display:flex;max-width:66vw;overflow-x:auto;gap:14px;padding-bottom:5px;scrollbar-width:none}
@@ -44,6 +46,7 @@ footer{background:rgba(251,248,242,.42)}
   .product-visual img{min-height:500px}
 }
 @media(max-width:560px){
+  .creator-preview-bar{position:relative;display:block;line-height:1.45}.creator-preview-actions{margin-top:5px}.has-creator-preview .site-header{top:0}
   .site-header{position:relative;display:block;padding-bottom:12px}
   .site-header nav{max-width:100%;margin-top:14px}
   .hero{min-height:auto}
