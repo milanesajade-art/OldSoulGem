@@ -16,7 +16,7 @@ function placeholderMarkup(piece) {
   return `<span class="visual-number">${esc(pieceNumber(piece.id))}</span><div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${esc(piece.name)}</strong><small>Imagery in development</small></div>`;
 }
 function visualMarkup(piece) {
-  if (piece.image) return `<a class="piece-visual" href="${productUrl(piece)}" data-piece-id="${esc(piece.id)}"><span class="visual-number">${esc(pieceNumber(piece.id))}</span><img src="${esc(piece.image)}" alt="${esc(piece.name)}"></a>`;
+  if (piece.image) return `<a class="piece-visual" href="${productUrl(piece)}" data-piece-id="${esc(piece.id)}"><span class="visual-number">${esc(pieceNumber(piece.id))}</span><img loading="lazy" src="${esc(piece.image)}" alt="${esc(piece.name)}"></a>`;
   if (piece.id === 'VIDA 002') return `<a class="piece-visual visual-bolt" href="${productUrl(piece)}"><span class="visual-number">002</span><div class="star-outline">☆</div><div class="bolt-outline">ϟ</div></a>`;
   return `<a class="piece-visual vida-placeholder" href="${productUrl(piece)}">${placeholderMarkup(piece)}</a>`;
 }
@@ -31,10 +31,10 @@ function renderSite() {
   const s = activeSite();
   setText('.hero-copy .eyebrow', s.eyebrow); setText('.hero-copy h1', s.heroTitle); setText('.hero-lede', s.heroLede);
   setText('.hero-copy .actions .btn', s.primaryCta); setText('.hero-copy .actions .text-link', s.secondaryCta);
-  setText('.manifesto-line', s.atelierTitle); setText('.manifesto > p:last-child', s.atelierBody);
+  setText('.manifesto-line', s.atelierTitle); setText('.manifesto-body', s.atelierBody);
   setText('.collection-section .section-head h2', s.collectionTitle); setText('.collection-section .section-head > p', s.collectionBody);
-  setText('.story-title h2', s.storyTitle); setText('.story-copy .lead', s.storyLead); const storyParas = document.querySelectorAll('.story-copy > p'); if (storyParas[1] && s.storyBody != null) storyParas[1].textContent = s.storyBody;
-  setText('.inquire-intro h2', s.inquiryTitle); const inquiryParas = document.querySelectorAll('.inquire-intro > p'); if (inquiryParas[1] && s.inquiryBody != null) inquiryParas[1].textContent = s.inquiryBody; setText('.availability span:last-child', s.availability);
+  setText('.story-title h2', s.storyTitle); setText('.story-copy .lead', s.storyLead); setText('.story-copy .story-body', s.storyBody);
+  setText('.inquire-intro h2', s.inquiryTitle); setText('.inquire-intro .inquiry-body', s.inquiryBody); setText('.availability span:last-child', s.availability);
 }
 function renderInterestOptions() {
   const select = document.getElementById('interestSelect'); if (!select) return;
@@ -44,13 +44,22 @@ function renderInterestOptions() {
 }
 function bindInquiryForm() {
   const form = document.getElementById('inquiryForm'); const note = document.getElementById('formNote'); if (!form) return;
-  form.addEventListener('submit', (e) => { e.preventDefault(); const data = Object.fromEntries(new FormData(form)); const saved = readJson(INQUIRY_KEY) || []; saved.unshift({...data, createdAt:new Date().toISOString(), status:'New'}); localStorage.setItem(INQUIRY_KEY, JSON.stringify(saved)); form.reset(); if (note) note.textContent = 'Inquiry saved in this preview. Direct delivery will be connected before customer launch.'; });
+  if (!preview()) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    const saved = readJson(INQUIRY_KEY) || [];
+    saved.unshift({...data, createdAt:new Date().toISOString(), status:'Preview'});
+    localStorage.setItem(INQUIRY_KEY, JSON.stringify(saved));
+    form.reset();
+    if (note) note.textContent = 'Preview inquiry saved locally. Live storefront submissions are emailed directly to Alé.';
+  });
 }
 function renderPreviewBar() {
   const p = preview(); if (!p) return;
   const existing = document.querySelector('.creator-preview-bar'); if (existing) existing.remove();
   const bar = document.createElement('div'); bar.className = 'creator-preview-bar unified-preview';
-  bar.innerHTML = `<span><strong>Creator Preview</strong> • ${p.publishedAt ? new Date(p.publishedAt).toLocaleString() : 'active'}</span><div class="creator-preview-actions"><a href="creator.html">Creator Studio</a><button type="button">Clear preview</button></div>`;
+  bar.innerHTML = `<span><strong>Creator Preview</strong> • ${p.publishedAt ? new Date(p.publishedAt).toLocaleString() : 'active'}</span><div class="creator-preview-actions"><a href="creator.html">Creator Studio</a><a href="index.html?baseline=1">Live baseline</a><button type="button">Clear preview</button></div>`;
   bar.querySelector('button').onclick = () => { localStorage.removeItem(PREVIEW_KEY); location.reload(); };
   document.body.prepend(bar); document.body.classList.add('has-creator-preview');
 }
