@@ -16,11 +16,14 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .visual-number{z-index:4;text-shadow:0 2px 15px rgba(0,0,0,.24)}
 .piece-copy{min-height:275px;display:flex;flex-direction:column;align-items:flex-start}
 .piece-copy .piece-link{margin-top:auto}
+.vida-placeholder{display:grid;place-items:center;text-decoration:none;background:radial-gradient(circle at 50% 35%,#3a3127 0,#211b16 42%,#120f0c 100%);color:#f7efe5;text-align:center;min-height:100%}
+.placeholder-copy{display:grid;gap:8px;padding:28px;position:relative;z-index:2}.placeholder-copy span,.placeholder-copy small{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c6a15f}.placeholder-copy strong{font-family:Georgia,serif;font-size:clamp(28px,4vw,52px);font-weight:400;letter-spacing:.04em}.placeholder-copy small{color:#a99e91}
 .product{min-height:76vh}
 .product-media{min-width:0}
 .product-visual{overflow:hidden;box-shadow:0 28px 80px rgba(23,20,17,.14);background:#ded5c9}
 .product-visual:has(img)::after{display:none!important}
 .product-visual img{min-height:650px}
+.product-visual.vida-placeholder{min-height:650px}
 .product-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
 .product-gallery img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:18px;background:#ded5c9}
 .product-gallery img:only-child{grid-column:1/-1;aspect-ratio:16/10}
@@ -44,6 +47,7 @@ footer{background:rgba(251,248,242,.42)}
   .piece-copy{min-height:0}
   .piece-copy .piece-link{margin-top:6px}
   .product-visual img{min-height:500px}
+  .product-visual.vida-placeholder{min-height:500px}
 }
 @media(max-width:560px){
   .creator-preview-bar{position:relative;display:block;line-height:1.45}.creator-preview-actions{margin-top:5px}.has-creator-preview .site-header{top:0}
@@ -58,6 +62,7 @@ footer{background:rgba(251,248,242,.42)}
   .product{padding:34px 20px 80px;gap:34px}
   .product-visual{min-height:0;border-radius:24px}
   .product-visual img{min-height:390px}
+  .product-visual.vida-placeholder{min-height:390px}
   .product-gallery{gap:8px;margin-top:8px}
   .product-gallery img{border-radius:14px}
   .specs div{align-items:flex-start}
