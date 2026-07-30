@@ -78,6 +78,24 @@ Expected: Creator identifies whether its workspace is based on the current produ
 Actual: local workspace is treated as authoritative indefinitely until manually reset.
 Fix direction: store a production fingerprint/version with the workspace, compare on Creator load and before publish, then require refresh/reconciliation when stale.
 
+### AUD-007 — P1 — Homepage signature hero is disconnected from collection state
+Status: CONFIRMED FROM LOGIC
+
+The homepage hero image/caption is hard-coded to Órbita in `index.html`, while collection visibility, name, image and status are managed separately through Creator/collection data. Órbita can therefore be hidden, renamed, or visually changed while the homepage still presents the old Órbita hero as the signature piece.
+
+Expected: the featured homepage piece is either derived from current collection data or explicitly controlled by Creator.
+Actual: hero identity is static and can disagree with production collection state.
+Fix direction: add a featured-piece setting to site data or derive the hero from a designated public piece, with a safe fallback.
+
+### AUD-008 — P1 — Product galleries are outside Creator control and can become mismatched
+Status: CONFIRMED FROM LOGIC
+
+Primary piece imagery is editable in Creator, but supporting gallery images are stored separately in `media-data.js`. Changing a piece's design/primary image does not validate or update its existing gallery, so old detail/profile images can remain attached to a newly changed piece.
+
+Expected: all product imagery for a piece is managed and validated as one unit.
+Actual: primary image and supporting gallery have separate sources of truth.
+Fix direction: extend the piece schema/Creator workflow to manage gallery media, or disable legacy galleries automatically when a primary/design identity changes until reviewed.
+
 ## Pass criteria before Luxury V2 resumes
 - 0 open P0 issues
 - 0 open P1 issues
@@ -86,6 +104,8 @@ Fix direction: store a production fingerprint/version with the workspace, compar
 - iPhone and Android installed-app journeys pass
 - Creator preview cannot alter normal live storefront behavior
 - Creator cannot publish incomplete or stale production data without an explicit reconciliation step
+- homepage featured-piece state remains consistent with collection state
+- primary imagery and product galleries cannot silently diverge
 - publish + cache/update path passes after a production change
 
 ## Audit status
