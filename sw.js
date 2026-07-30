@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vida-shell-v5';
+const CACHE_NAME = 'vida-shell-v6';
 const APP_SHELL = [
   './',
   './index.html',
