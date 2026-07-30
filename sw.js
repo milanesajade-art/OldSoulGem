@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vida-shell-v7';
+const CACHE_NAME = 'vida-shell-v8';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   './pwa.css',
   './collection-data.js',
   './site-data.js',
+  './media-data.js',
   './app.js',
   './product.js',
   './pwa.js',
