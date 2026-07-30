@@ -1,6 +1,7 @@
 (() => {
   const PREVIEW_KEY = 'vida_creator_preview_v2';
   const defaults = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? window.VIDA_COLLECTION_DEFAULTS : [];
+  const galleries = window.VIDA_PRODUCT_GALLERIES || {};
   const baselineMode = new URLSearchParams(location.search).get('baseline') === '1';
   const read = () => { if (baselineMode) return null; try { return JSON.parse(localStorage.getItem(PREVIEW_KEY) || 'null'); } catch { return null; } };
   const pieces = () => Array.isArray(read()?.pieces) ? read().pieces : defaults;
@@ -8,6 +9,36 @@
   const piece = pieces().find((p) => p.id === id);
   const set = (id, value) => { const el = document.getElementById(id); if (el && value != null) el.textContent = value; };
   const inquiryLink = (name) => `index.html?interest=${encodeURIComponent(name)}#inquire`;
+  const uniqueMedia = (items) => [...new Set(items.filter(Boolean))];
+
+  function renderGallery(visual, mainImg) {
+    const media = uniqueMedia([piece.image, ...(Array.isArray(galleries[piece.id]) ? galleries[piece.id] : [])]);
+    if (!visual || !mainImg || media.length < 2) return;
+    const mediaWrap = visual.closest('.product-media');
+    if (!mediaWrap) return;
+    const gallery = document.createElement('div');
+    gallery.className = 'product-gallery';
+    gallery.setAttribute('aria-label', `${piece.name} image gallery`);
+    media.forEach((src, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `product-gallery-button${index === 0 ? ' active' : ''}`;
+      button.setAttribute('aria-label', `View ${piece.name} image ${index + 1}`);
+      const thumb = document.createElement('img');
+      thumb.src = src;
+      thumb.alt = `${piece.name} view ${index + 1}`;
+      thumb.loading = 'lazy';
+      thumb.decoding = 'async';
+      button.appendChild(thumb);
+      button.addEventListener('click', () => {
+        mainImg.src = src;
+        gallery.querySelectorAll('.product-gallery-button').forEach((el) => el.classList.toggle('active', el === button));
+      });
+      gallery.appendChild(button);
+    });
+    mediaWrap.appendChild(gallery);
+  }
+
   function render() {
     const main = document.getElementById('genericProduct');
     if (!piece || piece.visibility === 'hidden') {
@@ -19,6 +50,7 @@
     if (visual && piece.image) {
       visual.classList.remove('vida-placeholder'); const img = document.createElement('img'); img.src = piece.image; img.alt = piece.name; img.decoding = 'async'; img.loading = 'eager'; img.fetchPriority = 'high'; visual.replaceChildren(img);
       img.addEventListener('error', () => { visual.classList.add('vida-placeholder'); visual.innerHTML = `<div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${piece.name.replace(/[<>]/g,'')}</strong><small>Imagery in development</small></div>`; }, {once:true});
+      renderGallery(visual, img);
     }
     const href = inquiryLink(piece.name); const inquiry = document.getElementById('productInquiry'); const inquiryTop = document.getElementById('productInquiryTop'); if (inquiry) inquiry.href = href; if (inquiryTop) inquiryTop.href = href;
     document.title = `${piece.name} | Vida Collection by Alé`; const description = `${piece.name} — ${piece.story || 'a private fine jewelry piece from Vida Collection by Alé.'}`; const desc = document.querySelector('meta[name="description"]'); if (desc) desc.setAttribute('content', description);
