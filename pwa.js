@@ -4,7 +4,12 @@
   root.classList.toggle('is-standalone', standalone);
 
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js', {scope:'./'}).catch(() => {}), {once:true});
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('./sw.js', {scope:'./', updateViaCache:'none'});
+        await registration.update();
+      } catch {}
+    }, {once:true});
   }
 
   function addDock() {
