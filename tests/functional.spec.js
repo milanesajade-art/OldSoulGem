@@ -46,7 +46,7 @@ test('explicit Preview URL uses saved Creator preview state', async ({ page }) =
 test('general inquiry requires an intentional interest selection', async ({ page }) => {
   await page.goto('/index.html#inquire', { waitUntil: 'domcontentloaded' });
   const select = page.locator('#interestSelect');
-  await expect(select).toBeRequired();
+  expect(await select.evaluate((el) => el.required)).toBe(true);
   await expect(select).toHaveValue('');
   await expect(select.locator('option').first()).toHaveText('Choose an option');
 });
