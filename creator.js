@@ -3,11 +3,18 @@ const SITE_DEFAULTS = window.VIDA_SITE_DEFAULTS || {};
 const WORKSPACE_KEY = 'vida_creator_workspace_v2';
 const PREVIEW_KEY = 'vida_creator_preview_v2';
 const INQUIRY_KEY = 'vida_inquiries';
-const DRIVE_LUZ = 'https://drive.google.com/thumbnail?id=1z67xn9XOQAmZS5Xes2UMvL4DEO6B4nu1&sz=w1600';
-const DRIVE_ORBITA = 'https://drive.google.com/thumbnail?id=13Ok8L8ltwjeKmSn-13kTAD8LBiUXhkwL&sz=w1600';
-const DRIVE_ENTRELAZADO = 'https://drive.google.com/thumbnail?id=1YWv3S2YuAzaJjHh1US---8qR_WTGN8Eq&sz=w1600';
-const MEDIA_ASSETS = ['', DRIVE_LUZ, DRIVE_ORBITA, DRIVE_ENTRELAZADO, 'assets/floral-opal-ring.svg', 'assets/orbit-opal-ring.svg', 'assets/braided-gold-band.svg'];
-const MEDIA_LABELS = {[DRIVE_LUZ]:'Luz de Alé • Drive original',[DRIVE_ORBITA]:'Órbita • Drive original',[DRIVE_ENTRELAZADO]:'Entrelazado • Drive original','assets/floral-opal-ring.svg':'Luz de Alé • fallback artwork','assets/orbit-opal-ring.svg':'Órbita • fallback artwork','assets/braided-gold-band.svg':'Entrelazado • fallback artwork'};
+const OLD_DRIVE_LUZ = 'https://drive.google.com/thumbnail?id=1z67xn9XOQAmZS5Xes2UMvL4DEO6B4nu1&sz=w1600';
+const OLD_DRIVE_ORBITA = 'https://drive.google.com/thumbnail?id=13Ok8L8ltwjeKmSn-13kTAD8LBiUXhkwL&sz=w1600';
+const OLD_DRIVE_ENTRELAZADO = 'https://drive.google.com/thumbnail?id=1YWv3S2YuAzaJjHh1US---8qR_WTGN8Eq&sz=w1600';
+const CLEAN_FLOR = 'https://drive.google.com/thumbnail?id=1STYhz_iuJAu4Yjxh0-z_c2SWWrG1y-_t&sz=w1600';
+const CLEAN_ORBITA = 'https://drive.google.com/thumbnail?id=1-5tVLig0R4tZ_8RcpMcTnMIWPb7avkWj&sz=w1600';
+const CLEAN_ORBITA_ANGLE = 'https://drive.google.com/thumbnail?id=1jRRwLeBcJCNWOBbybR-oz0tPB8JSX6Wo&sz=w1600';
+const CLEAN_ENTRELAZADO = 'https://drive.google.com/thumbnail?id=1FA4GqgSnIixn2i2gXGOV8CrwGIO4FzkK&sz=w1600';
+const CLEAN_ENTRELAZADO_HAND = 'https://drive.google.com/thumbnail?id=1RSch8nHdrAr7a1K8onAa5EcMmLbcGVQD&sz=w1600';
+const LUZ_FALLBACK = 'assets/floral-opal-ring.svg';
+const IMAGE_MIGRATIONS = {[OLD_DRIVE_LUZ]:LUZ_FALLBACK,[OLD_DRIVE_ORBITA]:CLEAN_ORBITA,[OLD_DRIVE_ENTRELAZADO]:CLEAN_ENTRELAZADO};
+const MEDIA_ASSETS = ['', CLEAN_FLOR, LUZ_FALLBACK, CLEAN_ORBITA, CLEAN_ORBITA_ANGLE, CLEAN_ENTRELAZADO, CLEAN_ENTRELAZADO_HAND, 'assets/orbit-opal-ring.svg', 'assets/braided-gold-band.svg'];
+const MEDIA_LABELS = {[CLEAN_FLOR]:'Flor de Vida • clean primary',[LUZ_FALLBACK]:'Luz de Alé • approved fallback',[CLEAN_ORBITA]:'Órbita • clean primary',[CLEAN_ORBITA_ANGLE]:'Órbita • clean angle',[CLEAN_ENTRELAZADO]:'Entrelazado • clean primary',[CLEAN_ENTRELAZADO_HAND]:'Entrelazado • clean on-hand','assets/orbit-opal-ring.svg':'Órbita • fallback artwork','assets/braided-gold-band.svg':'Entrelazado • fallback artwork'};
 const SITE_FIELDS = ['eyebrow','heroTitle','heroLede','primaryCta','secondaryCta','atelierTitle','atelierBody','collectionTitle','collectionBody','storyTitle','storyLead','storyBody','inquiryTitle','inquiryBody','availability'];
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -15,11 +22,12 @@ const clone = (v) => JSON.parse(JSON.stringify(v));
 const readJson = (key) => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
 const esc = (v='') => String(v).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function normalizeImageUrl(value='') { const raw = String(value || '').trim(); if (!raw) return ''; if (raw.startsWith('assets/')) return raw; if (!/^https:\/\//i.test(raw)) return ''; if (!raw.includes('drive.google.com')) return raw; const match = raw.match(/\/file\/d\/([^/]+)/) || raw.match(/[?&]id=([^&]+)/) || raw.match(/\/d\/([^/]+)/); return match?.[1] ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(match[1])}&sz=w1600` : raw; }
-function normalizePiece(piece, index=0) { return {id: piece?.id || `VIDA ${String(index + 1).padStart(3,'0')}`,name: piece?.name || 'Untitled Piece',status: piece?.status || 'Designer Review',visibility: piece?.visibility === 'hidden' ? 'hidden' : 'public',price: piece?.price || 'Private',materials: piece?.materials || '14K yellow gold',story: piece?.story || '',image: normalizeImageUrl(piece?.image || '')}; }
+function normalizePiece(piece, index=0) { const normalizedImage = normalizeImageUrl(piece?.image || ''); return {id: piece?.id || `VIDA ${String(index + 1).padStart(3,'0')}`,name: piece?.name || 'Untitled Piece',status: piece?.status || 'Designer Review',visibility: piece?.visibility === 'hidden' ? 'hidden' : 'public',price: piece?.price || 'Private',materials: piece?.materials || '14K yellow gold',story: piece?.story || '',image: IMAGE_MIGRATIONS[normalizedImage] || normalizedImage}; }
 function defaultWorkspace() { return { pieces: COLLECTION_DEFAULTS.map(normalizePiece), site: clone(SITE_DEFAULTS) }; }
 let workspace = readJson(WORKSPACE_KEY) || defaultWorkspace();
 workspace.pieces = Array.isArray(workspace.pieces) ? workspace.pieces.map(normalizePiece) : defaultWorkspace().pieces;
 workspace.site = {...clone(SITE_DEFAULTS), ...(workspace.site || {})};
+localStorage.setItem(WORKSPACE_KEY, JSON.stringify(workspace));
 let active = workspace.pieces[0]?.id || null;
 function saveWorkspace() { localStorage.setItem(WORKSPACE_KEY, JSON.stringify(workspace)); }
 function flash(selector, message) { const el = $(selector); if (!el) return; el.textContent = message; setTimeout(() => { if (el.textContent === message) el.textContent = ''; }, 6000); }
