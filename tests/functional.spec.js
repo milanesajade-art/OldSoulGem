@@ -22,7 +22,6 @@ test('normal storefront ignores saved Creator preview state', async ({ page }) =
     pieces: [{ id: 'VIDA 999', name: 'PREVIEW ONLY', status: 'Private', visibility: 'public', price: 'Private', materials: '14K gold', story: 'Preview state.', image: 'assets/orbit-opal-ring.svg' }],
     site: { heroTitle: 'PREVIEW ONLY TITLE' }
   });
-
   await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.hero-copy h1')).toHaveText('Made to be remembered.');
   await expect(page.locator('.creator-preview-bar')).toHaveCount(0);
@@ -36,7 +35,6 @@ test('explicit Preview URL uses saved Creator preview state', async ({ page }) =
     pieces: [{ id: 'VIDA 999', name: 'PREVIEW ONLY', status: 'Private', visibility: 'public', price: 'Private', materials: '14K gold', story: 'Preview state.', image: 'assets/orbit-opal-ring.svg' }],
     site: { heroTitle: 'PREVIEW ONLY TITLE' }
   });
-
   await page.goto('/index.html?preview=1', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.hero-copy h1')).toHaveText('PREVIEW ONLY TITLE');
   await expect(page.locator('.creator-preview-bar')).toBeVisible();
@@ -68,7 +66,6 @@ test('hidden product links fail safely', async ({ page }) => {
 test('known production gallery renders and mismatched preview gallery is suppressed', async ({ page }) => {
   await page.goto('/product.html?id=VIDA%20004', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.product-gallery-button')).toHaveCount(3);
-
   await setPreview(page, {
     version: 2,
     publishedAt: new Date().toISOString(),
@@ -116,4 +113,43 @@ test('Creator blocks incomplete public pieces from publishing', async ({ page })
   await expect(page.locator('#previewState')).toHaveText('BLOCKED');
   await expect(page.locator('#publishLive')).toBeDisabled();
   await expect(page.locator('#previewSummary')).toContainText('required publish');
+});
+
+test('mobile browser keeps primary navigation usable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.site-header nav')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Collection' }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Private Inquiry' }).first()).toBeVisible();
+});
+
+test('standalone app mode exposes the bottom navigation dock', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'standalone', { configurable: true, value: true });
+  });
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.pwa-dock')).toBeVisible();
+  await expect(page.locator('.pwa-dock').getByRole('link', { name: 'Home' })).toBeVisible();
+  await expect(page.locator('.pwa-dock').getByRole('link', { name: 'Collection' })).toBeVisible();
+  await expect(page.locator('.pwa-dock').getByRole('link', { name: 'Private Inquiry' })).toBeVisible();
+});
+
+test('app offline state is obvious and clears after reconnecting', async ({ page, context }) => {
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await context.setOffline(true);
+  await expect(page.locator('.pwa-offline-badge')).toBeVisible();
+  await context.setOffline(false);
+  await expect(page.locator('.pwa-offline-badge')).toHaveCount(0);
+});
+
+test('product sharing action appears when native sharing is available', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'share', { configurable: true, value: async () => { window.__vidaShared = true; } });
+  });
+  await page.goto('/product.html?id=VIDA%20004', { waitUntil: 'domcontentloaded' });
+  const share = page.getByRole('button', { name: 'Share Piece' });
+  await expect(share).toBeVisible();
+  await share.click();
+  expect(await page.evaluate(() => window.__vidaShared)).toBe(true);
 });
