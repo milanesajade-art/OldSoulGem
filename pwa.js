@@ -1,5 +1,7 @@
 (() => {
   const root = document.documentElement;
+  const params = new URLSearchParams(location.search);
+  const previewMode = params.has('preview');
   const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   root.classList.toggle('is-standalone', standalone);
 
@@ -12,18 +14,22 @@
     }, {once:true});
   }
 
+  function previewIndex(anchor='') {
+    return `index.html${previewMode ? '?preview=1' : ''}${anchor}`;
+  }
+
   function addDock() {
     if (!standalone || document.querySelector('.pwa-dock') || document.body.classList.contains('creator-body')) return;
-    const inquiryHref = document.getElementById('productInquiry')?.getAttribute('href') || 'index.html#inquire';
+    const inquiryHref = document.getElementById('productInquiry')?.getAttribute('href') || previewIndex('#inquire');
     const dock = document.createElement('nav');
     dock.className = 'pwa-dock';
     dock.setAttribute('aria-label', 'Vida app navigation');
-    dock.innerHTML = '<a href="index.html">Home</a><a href="index.html#collection">Collection</a><a href="' + inquiryHref.replace(/"/g,'&quot;') + '">Private Inquiry</a>';
+    dock.innerHTML = '<a href="' + previewIndex() + '">Home</a><a href="' + previewIndex('#collection') + '">Collection</a><a href="' + inquiryHref.replace(/"/g,'&quot;') + '">Private Inquiry</a>';
     document.body.appendChild(dock);
   }
 
   function addShareAction() {
-    if (!navigator.share || !document.getElementById('genericProduct') || document.querySelector('.pwa-share-piece')) return;
+    if (previewMode || !navigator.share || !document.getElementById('genericProduct') || document.querySelector('.pwa-share-piece')) return;
     const actions = document.querySelector('#genericProduct .actions');
     if (!actions) return;
     const button = document.createElement('button');
@@ -39,6 +45,7 @@
 
   let deferredPrompt = null;
   function installButton() {
+    if (previewMode) return null;
     let button = document.querySelector('.pwa-install');
     if (!button) {
       const footer = document.querySelector('footer .footer-copy') || document.querySelector('footer');
