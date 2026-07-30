@@ -1,0 +1,32 @@
+name: Vida Functional Audit
+
+on:
+  push:
+    branches:
+      - audit/functional-v2-2026-07-30
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Install audit dependencies
+        run: npm install
+
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run functional journeys
+        run: npm run test:functional

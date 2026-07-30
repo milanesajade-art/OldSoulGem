@@ -1,0 +1,10 @@
+{
+  "name": "vida-functional-audit",
+  "private": true,
+  "scripts": {
+    "test:functional": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.0"
+  }
+}
