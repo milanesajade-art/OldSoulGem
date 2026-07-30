@@ -2,17 +2,25 @@
   const PREVIEW_KEY = 'vida_creator_preview_v2';
   const defaults = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? window.VIDA_COLLECTION_DEFAULTS : [];
   const galleries = window.VIDA_PRODUCT_GALLERIES || {};
-  const baselineMode = new URLSearchParams(location.search).get('baseline') === '1';
-  const read = () => { if (baselineMode) return null; try { return JSON.parse(localStorage.getItem(PREVIEW_KEY) || 'null'); } catch { return null; } };
+  const params = new URLSearchParams(location.search);
+  const previewMode = params.has('preview');
+  const read = () => { if (!previewMode) return null; try { return JSON.parse(localStorage.getItem(PREVIEW_KEY) || 'null'); } catch { return null; } };
   const pieces = () => Array.isArray(read()?.pieces) ? read().pieces : defaults;
-  const id = new URLSearchParams(location.search).get('id');
+  const id = params.get('id');
   const piece = pieces().find((p) => p.id === id);
   const set = (id, value) => { const el = document.getElementById(id); if (el && value != null) el.textContent = value; };
-  const inquiryLink = (name) => `index.html?interest=${encodeURIComponent(name)}#inquire`;
+  const inquiryLink = (name) => `index.html?interest=${encodeURIComponent(name)}${previewMode ? '&preview=1' : ''}#inquire`;
+  const collectionLink = () => `index.html${previewMode ? '?preview=1' : ''}#collection`;
   const uniqueMedia = (items) => [...new Set(items.filter(Boolean))];
 
+  function galleryForPiece() {
+    const configured = Array.isArray(galleries[piece.id]) ? galleries[piece.id] : [];
+    if (!configured.length || configured[0] !== piece.image) return [];
+    return configured;
+  }
+
   function renderGallery(visual, mainImg) {
-    const media = uniqueMedia([piece.image, ...(Array.isArray(galleries[piece.id]) ? galleries[piece.id] : [])]);
+    const media = uniqueMedia(galleryForPiece());
     if (!visual || !mainImg || media.length < 2) return;
     const mediaWrap = visual.closest('.product-media');
     if (!mediaWrap) return;
@@ -44,7 +52,7 @@
   function render() {
     const main = document.getElementById('genericProduct');
     if (!piece || piece.visibility === 'hidden') {
-      if (main) main.innerHTML = '<div class="product-copy"><p class="eyebrow">VIDA</p><h1>Piece unavailable</h1><p>This piece is not currently shown in the Vida collection.</p><div class="actions"><a class="btn light" href="index.html#collection">Back to Collection</a></div></div>';
+      if (main) main.innerHTML = `<div class="product-copy"><p class="eyebrow">VIDA</p><h1>Piece unavailable</h1><p>This piece is not currently shown in the Vida collection.</p><div class="actions"><a class="btn light" href="${collectionLink()}">Back to Collection</a></div></div>`;
       document.title = 'Piece unavailable | Vida Collection by Alé'; return;
     }
     if (main) main.dataset.pieceId = piece.id;
@@ -56,6 +64,7 @@
       renderGallery(visual, img);
     }
     const href = inquiryLink(piece.name); const inquiry = document.getElementById('productInquiry'); const inquiryTop = document.getElementById('productInquiryTop'); if (inquiry) inquiry.href = href; if (inquiryTop) inquiryTop.href = href;
+    const back = document.querySelector('#genericProduct .actions .btn.light'); if (back) back.href = collectionLink();
     document.title = `${piece.name} | Vida Collection by Alé`; const description = `${piece.name} — ${piece.story || 'a private fine jewelry piece from Vida Collection by Alé.'}`; const desc = document.querySelector('meta[name="description"]'); if (desc) desc.setAttribute('content', description);
     const canonical = document.getElementById('productCanonical'); if (canonical) canonical.href = `${location.origin}${location.pathname}?id=${encodeURIComponent(piece.id)}`;
     const ogTitle = document.querySelector('meta[property="og:title"]'); if (ogTitle) ogTitle.content = `${piece.name} | Vida Collection by Alé`;
