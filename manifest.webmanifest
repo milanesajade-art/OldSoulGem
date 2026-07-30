@@ -1,0 +1,35 @@
+{
+  "name": "Vida Collection by Alé",
+  "short_name": "Vida",
+  "description": "Private fine jewelry by Alé — one-of-one and limited pieces shaped around remarkable stones, sculptural gold, and personal stories.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2ece3",
+  "theme_color": "#11100e",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["shopping", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Collection",
+      "short_name": "Collection",
+      "url": "./#collection"
+    },
+    {
+      "name": "Private Inquiry",
+      "short_name": "Inquiry",
+      "url": "./#inquire"
+    }
+  ]
+}
