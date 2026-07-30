@@ -21,6 +21,16 @@ function visualMarkup(piece) {
   if (piece.id === 'VIDA 002') return `<a class="piece-visual visual-bolt" href="${productUrl(piece)}"><span class="visual-number">002</span><div class="star-outline">☆</div><div class="bolt-outline">ϟ</div></a>`;
   return `<a class="piece-visual vida-placeholder" href="${productUrl(piece)}">${placeholderMarkup(piece)}</a>`;
 }
+function renderHeroVisual() {
+  const hero = document.querySelector('.hero-art'); if (!hero) return;
+  const pieces = visiblePieces();
+  const featured = pieces.find((p) => p.id === 'VIDA 004' && p.image) || pieces.find((p) => p.image);
+  if (!featured) { hero.setAttribute('aria-label','Vida Collection design'); return; }
+  const img = hero.querySelector('img'); const caption = hero.querySelector('.art-caption strong');
+  if (img) { img.src = featured.image; img.alt = `${featured.name} by Vida Collection by Alé`; img.onerror = () => { img.onerror = null; img.src = 'assets/orbit-opal-ring.svg'; }; }
+  if (caption) caption.textContent = featured.name;
+  hero.setAttribute('aria-label', `${featured.name} by Vida Collection by Alé`);
+}
 function renderCollection() {
   const grid = document.querySelector('.collection-grid'); if (!grid) return;
   const pieces = visiblePieces();
@@ -67,6 +77,6 @@ function renderPreviewBar() {
   bar.querySelector('button').onclick = () => { localStorage.removeItem(PREVIEW_KEY); location.href = 'index.html'; };
   document.body.prepend(bar); document.body.classList.add('has-creator-preview');
 }
-function init() { renderSite(); renderCollection(); renderInterestOptions(); bindInquiryForm(); renderPreviewBar(); }
+function init() { renderSite(); renderHeroVisual(); renderCollection(); renderInterestOptions(); bindInquiryForm(); renderPreviewBar(); }
 document.addEventListener('DOMContentLoaded', init);
 window.addEventListener('storage', (e) => { if (previewMode && e.key === PREVIEW_KEY) location.reload(); });
