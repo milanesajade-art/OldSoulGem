@@ -13,13 +13,20 @@
   const collectionLink = () => `index.html${previewMode ? '?preview=1' : ''}#collection`;
   const uniqueMedia = (items) => [...new Set(items.filter(Boolean))];
 
+  function customerStatus(status='Private') {
+    const normalized = String(status || 'Private').trim().toLowerCase();
+    if (normalized === 'designer review') return 'Private Preview';
+    if (normalized === 'in development') return 'In Development';
+    if (normalized === 'coming soon') return 'Coming Soon';
+    if (normalized === 'one of one') return 'One of One';
+    return status || 'Private';
+  }
+
   function availabilityForPiece(value) {
     const status = String(value?.status || '').trim().toLowerCase();
-    if (status === 'one of one') return 'Available by private inquiry';
     if (status === 'coming soon') return 'Coming soon';
     if (status === 'in development') return 'In development';
     if (status === 'designer review') return 'Private preview';
-    if (status === 'private') return 'Private inquiry';
     return 'Private inquiry';
   }
 
@@ -66,7 +73,8 @@
       document.title = 'Piece unavailable | Vida Collection by Alé'; return;
     }
     if (main) main.dataset.pieceId = piece.id;
-    set('genericEyebrow', `${piece.id} • ${String(piece.status || 'Private').toUpperCase()}`); set('genericName', piece.name); set('genericPrice', piece.price || 'Private'); set('genericStory', piece.story || ''); set('genericMaterials', piece.materials || 'Fine jewelry'); set('genericStatus', piece.status || 'Private'); set('genericAvailability', availabilityForPiece(piece)); set('genericReference', piece.id); set('genericDesignStory', piece.story || 'This piece is part of the evolving Vida collection.'); set('genericVisualName', piece.name);
+    const displayStatus = customerStatus(piece.status);
+    set('genericEyebrow', `${piece.id} • ${displayStatus.toUpperCase()}`); set('genericName', piece.name); set('genericPrice', piece.price || 'Private'); set('genericStory', piece.story || ''); set('genericMaterials', piece.materials || 'Fine jewelry'); set('genericStatus', displayStatus); set('genericAvailability', availabilityForPiece(piece)); set('genericReference', piece.id); set('genericDesignStory', piece.story || 'This piece is part of the evolving Vida collection.'); set('genericVisualName', piece.name);
     const visual = document.getElementById('genericVisual');
     if (visual && piece.image) {
       visual.classList.remove('vida-placeholder'); const img = document.createElement('img'); img.src = piece.image; img.alt = piece.name; img.decoding = 'async'; img.loading = 'eager'; img.fetchPriority = 'high'; visual.replaceChildren(img);
