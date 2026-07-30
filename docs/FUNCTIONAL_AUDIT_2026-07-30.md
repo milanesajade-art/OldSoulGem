@@ -60,6 +60,24 @@ Expected: visitor must deliberately choose a piece, custom piece, or private app
 Actual: first public piece is preselected unless a valid `?interest=` parameter is supplied.
 Fix direction: add a disabled `Choose an option` placeholder and require selection, while preserving direct-product preselection.
 
+### AUD-005 — P1 — Creator validation warnings do not block publishing
+Status: CONFIRMED FROM LOGIC
+
+Creator validates name, materials, story, price and public imagery for the editor UI, but `publishLive()` does not check those validation results before opening the production publish request. The server workflow also only hard-blocks invalid IDs, duplicate IDs, missing names, and malformed packages.
+
+Expected: a piece marked incomplete by Creator cannot be published until critical validation errors are resolved.
+Actual: the same piece can still be included in a production publish package.
+Fix direction: separate blocking errors from warnings and prevent Publish Live while any blocking error exists; mirror critical validation in the GitHub workflow.
+
+### AUD-006 — P1 — Browser-local Creator workspace can overwrite newer production state
+Status: CONFIRMED FROM LOGIC
+
+Creator loads `vida_creator_workspace_v2` from localStorage before the repo defaults and does not reconcile that workspace against a production revision/version. A long-lived or stale browser workspace can therefore publish older collection/site content over newer repo changes.
+
+Expected: Creator identifies whether its workspace is based on the current production revision and warns/reloads before publishing stale data.
+Actual: local workspace is treated as authoritative indefinitely until manually reset.
+Fix direction: store a production fingerprint/version with the workspace, compare on Creator load and before publish, then require refresh/reconciliation when stale.
+
 ## Pass criteria before Luxury V2 resumes
 - 0 open P0 issues
 - 0 open P1 issues
@@ -67,6 +85,7 @@ Fix direction: add a disabled `Choose an option` placeholder and require selecti
 - direct product inquiry preserves exact product context
 - iPhone and Android installed-app journeys pass
 - Creator preview cannot alter normal live storefront behavior
+- Creator cannot publish incomplete or stale production data without an explicit reconciliation step
 - publish + cache/update path passes after a production change
 
 ## Audit status
