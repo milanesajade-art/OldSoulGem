@@ -29,9 +29,11 @@
       thumb.alt = `${piece.name} view ${index + 1}`;
       thumb.loading = 'lazy';
       thumb.decoding = 'async';
+      thumb.addEventListener('error', () => button.remove(), {once:true});
       button.appendChild(thumb);
       button.addEventListener('click', () => {
         mainImg.src = src;
+        mainImg.alt = `${piece.name} view ${index + 1}`;
         gallery.querySelectorAll('.product-gallery-button').forEach((el) => el.classList.toggle('active', el === button));
       });
       gallery.appendChild(button);
@@ -45,6 +47,7 @@
       if (main) main.innerHTML = '<div class="product-copy"><p class="eyebrow">VIDA</p><h1>Piece unavailable</h1><p>This piece is not currently shown in the Vida collection.</p><div class="actions"><a class="btn light" href="index.html#collection">Back to Collection</a></div></div>';
       document.title = 'Piece unavailable | Vida Collection by Alé'; return;
     }
+    if (main) main.dataset.pieceId = piece.id;
     set('genericEyebrow', `${piece.id} • ${String(piece.status || 'Private').toUpperCase()}`); set('genericName', piece.name); set('genericPrice', piece.price || 'Private'); set('genericStory', piece.story || ''); set('genericMaterials', piece.materials || 'Fine jewelry'); set('genericStatus', piece.status || 'Private'); set('genericAvailability', piece.price || 'Private inquiry'); set('genericReference', piece.id); set('genericDesignStory', piece.story || 'This piece is part of the evolving Vida collection.'); set('genericVisualName', piece.name);
     const visual = document.getElementById('genericVisual');
     if (visual && piece.image) {
