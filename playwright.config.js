@@ -8,6 +8,10 @@ module.exports = defineConfig({
     baseURL: 'http://127.0.0.1:4173',
     viewport: { width: 1280, height: 900 }
   },
+  projects: [
+    { name: 'chromium', use: { browserName: 'chromium' } },
+    { name: 'webkit', use: { browserName: 'webkit' } }
+  ],
   webServer: {
     command: 'python3 -m http.server 4173',
     url: 'http://127.0.0.1:4173/index.html',
