@@ -1,0 +1,55 @@
+name: Verify Live Functional V2
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Functional V2 is deployed on GitHub Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://milanesajade-art.github.io/thevidacollection'
+          CACHE_BUST="verify=${GITHUB_RUN_ID}"
+          success=0
+
+          for attempt in $(seq 1 24); do
+            echo "Live verification attempt ${attempt}/24"
+            index="$(curl -fsSL "${BASE}/index.html?${CACHE_BUST}" || true)"
+            app="$(curl -fsSL "${BASE}/app.js?${CACHE_BUST}" || true)"
+            product="$(curl -fsSL "${BASE}/product.js?${CACHE_BUST}" || true)"
+            creator="$(curl -fsSL "${BASE}/creator.html?${CACHE_BUST}" || true)"
+            sw="$(curl -fsSL "${BASE}/sw.js?${CACHE_BUST}" || true)"
+
+            if [[ "$index" == *'app.js?v=6'* ]] \
+              && [[ "$index" == *'pwa.js?v=7'* ]] \
+              && [[ "$app" == *"const previewMode = query.has('preview');"* ]] \
+              && [[ "$app" == *'Private Preview'* ]] \
+              && [[ "$product" == *'function availabilityForPiece'* ]] \
+              && [[ "$creator" == *'creator-policy.js?v=1'* ]] \
+              && [[ "$creator" == *'Live delivery active'* ]] \
+              && [[ "$sw" == *"vida-shell-v13"* ]]; then
+              success=1
+              break
+            fi
+
+            sleep 10
+          done
+
+          if [[ "$success" != 1 ]]; then
+            echo 'Functional V2 markers were not all visible on the public Pages site in time.'
+            exit 1
+          fi
+
+          curl -fsSL "${BASE}/?${CACHE_BUST}" >/dev/null
+          curl -fsSL "${BASE}/product.html?id=VIDA%20004&${CACHE_BUST}" >/dev/null
+          curl -fsSL "${BASE}/creator.html?${CACHE_BUST}" >/dev/null
+          curl -fsSL "${BASE}/thanks.html?${CACHE_BUST}" >/dev/null
+
+          echo 'Functional V2 public deployment verified.'
