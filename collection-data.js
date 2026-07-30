@@ -25,7 +25,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "story": "A luminous opal surrounded by an asymmetrical floral burst of color and flowing goldwork.",
     "id": "VIDA 003",
     "status": "Designer Review",
-    "image": "assets/floral-opal-ring.svg",
+    "image": "https://drive.google.com/thumbnail?id=1RHhwrEkBw-TBh-aBR0pOJJdx49PDeWJb&sz=w1600",
     "materials": "14K yellow gold • white opal • multicolor accents",
     "name": "Luz de Alé"
   },
