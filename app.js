@@ -12,6 +12,12 @@ const activeSite = () => ({...SITE_DEFAULTS, ...(preview()?.site || {})});
 const visiblePieces = () => activePieces().filter((p) => p.visibility !== 'hidden');
 const pieceNumber = (id='') => (String(id).match(/\d+/)?.[0] || '').padStart(3,'0');
 const productUrl = (piece) => `product.html?id=${encodeURIComponent(piece.id)}${previewMode ? '&preview=1' : ''}`;
+const HERO_FALLBACKS = {
+  'VIDA 001': 'assets/floral-opal-ring.svg',
+  'VIDA 003': 'assets/floral-opal-ring.svg',
+  'VIDA 004': 'assets/orbit-opal-ring.svg',
+  'VIDA 005': 'assets/braided-gold-band.svg'
+};
 
 function customerStatus(status='Private') {
   const normalized = String(status || 'Private').trim().toLowerCase();
@@ -35,8 +41,22 @@ function renderHeroVisual() {
   const pieces = visiblePieces();
   const featured = pieces.find((p) => p.id === 'VIDA 004' && p.image) || pieces.find((p) => p.image);
   if (!featured) { hero.setAttribute('aria-label','Vida Collection design'); return; }
-  const img = hero.querySelector('img'); const caption = hero.querySelector('.art-caption strong');
-  if (img) { img.src = featured.image; img.alt = `${featured.name} by Vida Collection by Alé`; img.onerror = () => { img.onerror = null; img.src = 'assets/orbit-opal-ring.svg'; }; }
+  const img = hero.querySelector('img');
+  const caption = hero.querySelector('.art-caption strong');
+  if (img) {
+    img.src = featured.image;
+    img.alt = `${featured.name} by Vida Collection by Alé`;
+    img.onerror = () => {
+      const fallback = HERO_FALLBACKS[featured.id];
+      if (fallback && img.getAttribute('src') !== fallback) {
+        img.src = fallback;
+        return;
+      }
+      img.onerror = null;
+      img.remove();
+      hero.classList.add('vida-placeholder');
+    };
+  }
   if (caption) caption.textContent = featured.name;
   hero.setAttribute('aria-label', `${featured.name} by Vida Collection by Alé`);
 }
