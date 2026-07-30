@@ -17,6 +17,21 @@
     document.body.appendChild(dock);
   }
 
+  function addShareAction() {
+    if (!navigator.share || !document.getElementById('genericProduct') || document.querySelector('.pwa-share-piece')) return;
+    const actions = document.querySelector('#genericProduct .actions');
+    if (!actions) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn light pwa-share-piece';
+    button.textContent = 'Share Piece';
+    button.addEventListener('click', async () => {
+      const title = document.getElementById('genericName')?.textContent?.trim() || 'Vida Collection by Alé';
+      try { await navigator.share({title, text:`${title} • Vida Collection by Alé`, url:location.href}); } catch {}
+    });
+    actions.appendChild(button);
+  }
+
   let deferredPrompt = null;
   function installButton() {
     let button = document.querySelector('.pwa-install');
@@ -66,5 +81,5 @@
 
   window.addEventListener('online', setOfflineState);
   window.addEventListener('offline', setOfflineState);
-  document.addEventListener('DOMContentLoaded', () => { addDock(); setOfflineState(); });
+  document.addEventListener('DOMContentLoaded', () => { addDock(); addShareAction(); setOfflineState(); });
 })();
