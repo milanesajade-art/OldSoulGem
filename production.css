@@ -10,6 +10,11 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .text-link:hover,.piece-link:hover{opacity:.62}
 .hero-art,.piece-visual,.product-visual{isolation:isolate}
 .hero-art img,.piece-visual img,.product-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.hero-art img{object-position:50% 54%}
+.piece[data-piece-id="VIDA 001"] .piece-visual img{object-position:50% 50%}
+.piece[data-piece-id="VIDA 003"] .piece-visual img{object-position:50% 61%}
+.piece[data-piece-id="VIDA 004"] .piece-visual img{object-position:50% 54%}
+.piece[data-piece-id="VIDA 005"] .piece-visual img{object-position:50% 52%}
 .hero-art:hover img,.piece:hover .piece-visual img{transform:scale(1.018)}
 .piece{transition:transform .3s ease,box-shadow .3s ease}
 .piece:hover{transform:translateY(-3px);box-shadow:0 30px 80px rgba(23,20,17,.13)}
@@ -23,12 +28,17 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .product-visual{overflow:hidden;box-shadow:0 28px 80px rgba(23,20,17,.14);background:#ded5c9}
 .product-visual:has(img)::after{display:none!important}
 .product-visual img{min-height:650px}
+.product[data-piece-id="VIDA 003"] .product-visual img{object-position:50% 60%}
+.product[data-piece-id="VIDA 004"] .product-visual img{object-position:50% 53%}
+.product[data-piece-id="VIDA 005"] .product-visual img{object-position:50% 52%}
 .product-visual.vida-placeholder{min-height:650px}
 .product-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
 .product-gallery-button{appearance:none;border:1px solid rgba(23,20,17,.12);padding:0;background:#ded5c9;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
 .product-gallery-button:hover{transform:translateY(-2px)}
 .product-gallery-button.active{border-color:#9c7339;box-shadow:0 0 0 2px rgba(156,115,57,.14)}
 .product-gallery-button img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#ded5c9}
+.product-gallery-button:nth-child(3):last-child{grid-column:1/-1}
+.product-gallery-button:nth-child(3):last-child img{aspect-ratio:16/9;object-position:50% 52%}
 .product-copy{padding-top:22px;max-width:690px}
 .product-copy>p:not(.eyebrow):not(.price){color:#625a52;font-size:17px}
 .specs strong{text-align:right}
@@ -60,6 +70,7 @@ footer{background:rgba(251,248,242,.42)}
   .hero-art img{min-height:420px!important}
   .piece,.piece-hero{border-radius:22px}
   .piece-visual,.piece-hero .piece-visual{height:360px}
+  .piece[data-piece-id="VIDA 003"] .piece-visual img{object-position:50% 58%}
   .product{padding:34px 20px 80px;gap:34px}
   .product-visual{min-height:0;border-radius:24px}
   .product-visual img{min-height:390px}
