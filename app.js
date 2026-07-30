@@ -13,6 +13,15 @@ const visiblePieces = () => activePieces().filter((p) => p.visibility !== 'hidde
 const pieceNumber = (id='') => (String(id).match(/\d+/)?.[0] || '').padStart(3,'0');
 const productUrl = (piece) => `product.html?id=${encodeURIComponent(piece.id)}${previewMode ? '&preview=1' : ''}`;
 
+function customerStatus(status='Private') {
+  const normalized = String(status || 'Private').trim().toLowerCase();
+  if (normalized === 'designer review') return 'Private Preview';
+  if (normalized === 'in development') return 'In Development';
+  if (normalized === 'coming soon') return 'Coming Soon';
+  if (normalized === 'one of one') return 'One of One';
+  return status || 'Private';
+}
+
 function placeholderMarkup(piece) {
   return `<span class="visual-number">${esc(pieceNumber(piece.id))}</span><div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${esc(piece.name)}</strong><small>Imagery in development</small></div>`;
 }
@@ -34,7 +43,7 @@ function renderHeroVisual() {
 function renderCollection() {
   const grid = document.querySelector('.collection-grid'); if (!grid) return;
   const pieces = visiblePieces();
-  grid.innerHTML = pieces.map((p,index) => `<article class="piece ${index === 0 ? 'piece-hero' : ''}" data-piece-id="${esc(p.id)}">${visualMarkup(p)}<div class="piece-copy"><div class="piece-top"><p class="eyebrow">${esc(p.id)} • ${esc(String(p.status || 'Private').toUpperCase())}</p><span class="price-tag">${esc(p.price || 'Private')}</span></div><h3>${esc(p.name)}</h3><p class="meta">${esc(p.materials || 'Fine jewelry')}</p><p class="piece-story">${esc(p.story || '')}</p><a class="piece-link" href="${productUrl(p)}">Discover the piece →</a></div></article>`).join('');
+  grid.innerHTML = pieces.map((p,index) => `<article class="piece ${index === 0 ? 'piece-hero' : ''}" data-piece-id="${esc(p.id)}">${visualMarkup(p)}<div class="piece-copy"><div class="piece-top"><p class="eyebrow">${esc(p.id)} • ${esc(customerStatus(p.status).toUpperCase())}</p><span class="price-tag">${esc(p.price || 'Private')}</span></div><h3>${esc(p.name)}</h3><p class="meta">${esc(p.materials || 'Fine jewelry')}</p><p class="piece-story">${esc(p.story || '')}</p><a class="piece-link" href="${productUrl(p)}">Discover the piece →</a></div></article>`).join('');
   grid.querySelectorAll('.piece-visual img').forEach((img) => img.addEventListener('error', () => { const piece = pieces.find((p) => p.id === img.closest('[data-piece-id]')?.dataset.pieceId); const visual = img.closest('.piece-visual'); if (piece && visual) { visual.classList.add('vida-placeholder'); visual.innerHTML = placeholderMarkup(piece); } }, {once:true}));
 }
 function setText(selector, value) { const el = document.querySelector(selector); if (el && value != null) el.textContent = value; }
