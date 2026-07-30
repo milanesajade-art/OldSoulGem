@@ -5,7 +5,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "story": "The opening one-of-one cocktail ring and anchor of the Vida collection.",
     "id": "VIDA 001",
     "status": "One of One",
-    "image": "",
+    "image": "https://drive.google.com/thumbnail?id=1STYhz_iuJAu4Yjxh0-z_c2SWWrG1y-_t&sz=w1600",
     "materials": "14K yellow gold • opal",
     "name": "Flor de Vida"
   },
@@ -25,7 +25,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "story": "A luminous opal surrounded by an asymmetrical floral burst of color and flowing goldwork.",
     "id": "VIDA 003",
     "status": "Designer Review",
-    "image": "https://drive.google.com/thumbnail?id=1z67xn9XOQAmZS5Xes2UMvL4DEO6B4nu1&sz=w1600",
+    "image": "assets/floral-opal-ring.svg",
     "materials": "14K yellow gold • white opal • multicolor accents",
     "name": "Luz de Alé"
   },
@@ -35,7 +35,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "story": "A celestial black opal composition framed by orbital arcs, gemstone points, moon and star details.",
     "id": "VIDA 004",
     "status": "Designer Review",
-    "image": "https://drive.google.com/thumbnail?id=13Ok8L8ltwjeKmSn-13kTAD8LBiUXhkwL&sz=w1600",
+    "image": "https://drive.google.com/thumbnail?id=1-5tVLig0R4tZ_8RcpMcTnMIWPb7avkWj&sz=w1600",
     "materials": "14K yellow gold • black opal • colored gemstone accents",
     "name": "Órbita"
   },
@@ -45,7 +45,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "story": "A continuous two-strand interwoven band with rounded polished strands, visible openings, and a sculptural profile.",
     "id": "VIDA 005",
     "status": "Coming Soon",
-    "image": "https://drive.google.com/thumbnail?id=1YWv3S2YuAzaJjHh1US---8qR_WTGN8Eq&sz=w1600",
+    "image": "https://drive.google.com/thumbnail?id=1FA4GqgSnIixn2i2gXGOV8CrwGIO4FzkK&sz=w1600",
     "materials": "14K yellow gold • two-strand interwoven band • open negative space",
     "name": "Entrelazado"
   },
