@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://milanesajade-art.github.io/ale-jewelry/sitemap.xml
+Sitemap: https://milanesajade-art.github.io/thevidacollection/sitemap.xml
