@@ -81,7 +81,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
   },
   {
     "price": "From $650",
-    "visibility": "public",
+    "visibility": "hidden",
     "story": "A personal talisman created around a milestone, memory, birthstone, or meaningful symbol. Vida Talisman No. 1 offers an intimate entry into the collection while preserving its sculptural goldwork and gemstone-led identity.",
     "id": "VIDA 009",
     "status": "Coming Soon",
@@ -90,3 +90,21 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "name": "Vida Talisman No. 1"
   }
 ];
+
+// Preserve the established accessible placeholder while allowing the inquiry
+// choices themselves to be expanded by app.js.
+function normalizeVidaInterestPlaceholder() {
+  const select = document.getElementById('interestSelect');
+  const placeholder = select?.querySelector('option[value=""]');
+  if (placeholder && placeholder.textContent !== 'Choose an option') {
+    placeholder.textContent = 'Choose an option';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('interestSelect');
+  if (!select) return;
+  const observer = new MutationObserver(normalizeVidaInterestPlaceholder);
+  observer.observe(select, {childList: true});
+  normalizeVidaInterestPlaceholder();
+});
