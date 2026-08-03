@@ -2,6 +2,7 @@ const COLLECTION_DEFAULTS = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? win
 const SITE_DEFAULTS = window.VIDA_SITE_DEFAULTS || {};
 const PREVIEW_KEY = 'vida_creator_preview_v2';
 const INQUIRY_KEY = 'vida_inquiries';
+const SPECIAL_INTERESTS = ['A personalized Vida Talisman', 'A one-of-one custom piece', 'Private appointment'];
 const readJson = (key) => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
 const esc = (v='') => String(v).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const query = new URLSearchParams(location.search);
@@ -78,10 +79,11 @@ function renderSite() {
 }
 function renderInterestOptions() {
   const select = document.getElementById('interestSelect'); if (!select) return;
-  const options = visiblePieces().map((p) => p.name).concat(['A custom piece','Private appointment']);
+  const productOptions = visiblePieces().map((p) => p.name);
+  const options = [...new Set(productOptions.concat(SPECIAL_INTERESTS))];
   const requested = query.get('interest');
   select.required = true;
-  select.innerHTML = `<option value="" disabled ${requested && options.includes(requested) ? '' : 'selected'}>Choose an option</option>` + options.map((v) => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  select.innerHTML = `<option value="" disabled ${requested && options.includes(requested) ? '' : 'selected'}>Choose a piece or service</option>` + options.map((v) => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
   if (requested && options.includes(requested)) select.value = requested;
 }
 function bindInquiryForm() {
