@@ -2,7 +2,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
   {
     "price": "$5,000",
     "visibility": "public",
-    "story": "The opening one-of-one cocktail ring and anchor of the Vida collection.",
+    "story": "The opening one-of-one cocktail ring and an anchor of the Vida collection. Flor de Vida is luminous, sculptural, and designed to feel unmistakably personal.",
     "id": "VIDA 001",
     "status": "One of One",
     "image": "https://drive.google.com/thumbnail?id=1STYhz_iuJAu4Yjxh0-z_c2SWWrG1y-_t&sz=w1600",
@@ -10,9 +10,9 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "name": "Flor de Vida"
   },
   {
-    "price": "Private",
+    "price": "By Commission",
     "visibility": "public",
-    "story": "An open star at the ear with an elongated hollow lightning-bolt drop, designed as a recognizable Vida signature.",
+    "story": "An open star at the ear with an elongated hollow lightning-bolt drop, created as a recognizable Vida signature. Graphic, light, and distinctive, it balances playful energy with a refined finish.",
     "id": "VIDA 002",
     "status": "In Development",
     "image": "",
@@ -20,9 +20,9 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "name": "Star / Bolt"
   },
   {
-    "price": "Private",
+    "price": "Private Pricing",
     "visibility": "public",
-    "story": "A luminous opal surrounded by an asymmetrical floral burst of color and flowing goldwork.",
+    "story": "A luminous opal surrounded by an asymmetrical floral burst of color and flowing goldwork. Luz de Alé is expressive, feminine, and intended to remain one of one.",
     "id": "VIDA 003",
     "status": "Designer Review",
     "image": "https://drive.google.com/thumbnail?id=1RHhwrEkBw-TBh-aBR0pOJJdx49PDeWJb&sz=w1600",
@@ -30,9 +30,9 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "name": "Luz de Alé"
   },
   {
-    "price": "Private",
+    "price": "Private Pricing",
     "visibility": "public",
-    "story": "A celestial black opal composition framed by orbital arcs, gemstone points, moon and star details.",
+    "story": "A celestial black-opal composition framed by orbital arcs, gemstone points, and cosmic detail. Órbita captures the imaginative, symbolic side of the Vida point of view.",
     "id": "VIDA 004",
     "status": "Designer Review",
     "image": "https://drive.google.com/thumbnail?id=1-5tVLig0R4tZ_8RcpMcTnMIWPb7avkWj&sz=w1600",
@@ -42,7 +42,7 @@ window.VIDA_COLLECTION_DEFAULTS = [
   {
     "price": "Coming Soon",
     "visibility": "public",
-    "story": "A continuous two-strand interwoven band with rounded polished strands, visible openings, and a sculptural profile.",
+    "story": "A continuous interwoven band with rounded polished strands and visible openings, exploring connection, movement, and sculptural simplicity through the Vida design language.",
     "id": "VIDA 005",
     "status": "Coming Soon",
     "image": "https://drive.google.com/thumbnail?id=1FA4GqgSnIixn2i2gXGOV8CrwGIO4FzkK&sz=w1600",
@@ -78,5 +78,15 @@ window.VIDA_COLLECTION_DEFAULTS = [
     "image": "",
     "materials": "14K yellow gold • warm-toned gemstones",
     "name": "Fuego Unido"
+  },
+  {
+    "price": "From $650",
+    "visibility": "public",
+    "story": "A personal talisman created around a milestone, memory, birthstone, or meaningful symbol. Vida Talisman No. 1 offers an intimate entry into the collection while preserving its sculptural goldwork and gemstone-led identity.",
+    "id": "VIDA 009",
+    "status": "Coming Soon",
+    "image": "",
+    "materials": "14K yellow gold • opal or birthstone center • talisman pendant",
+    "name": "Vida Talisman No. 1"
   }
 ];
