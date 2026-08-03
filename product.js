@@ -9,7 +9,7 @@
   const id = params.get('id');
   const piece = pieces().find((p) => p.id === id);
   const set = (id, value) => { const el = document.getElementById(id); if (el && value != null) el.textContent = value; };
-  const inquiryLink = (name) => `index.html?interest=${encodeURIComponent(name)}${previewMode ? '&preview=1' : ''}#inquire`;
+  const inquiryLink = (interest) => `index.html?interest=${encodeURIComponent(interest)}${previewMode ? '&preview=1' : ''}#inquire`;
   const collectionLink = () => `index.html${previewMode ? '?preview=1' : ''}#collection`;
   const uniqueMedia = (items) => [...new Set(items.filter(Boolean))];
 
@@ -24,9 +24,10 @@
 
   function availabilityForPiece(value) {
     const status = String(value?.status || '').trim().toLowerCase();
-    if (status === 'coming soon') return 'Coming soon';
-    if (status === 'in development') return 'In development';
+    if (status === 'coming soon') return 'Advance inquiry';
+    if (status === 'in development') return 'Available by commission';
     if (status === 'designer review') return 'Private preview';
+    if (status === 'one of one') return 'Private inquiry';
     return 'Private inquiry';
   }
 
@@ -81,8 +82,20 @@
       img.addEventListener('error', () => { visual.classList.add('vida-placeholder'); visual.innerHTML = `<div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${piece.name.replace(/[<>]/g,'')}</strong><small>Imagery in development</small></div>`; }, {once:true});
       renderGallery(visual, img);
     }
-    const href = inquiryLink(piece.name); const inquiry = document.getElementById('productInquiry'); const inquiryTop = document.getElementById('productInquiryTop'); if (inquiry) inquiry.href = href; if (inquiryTop) inquiryTop.href = href;
-    const back = document.querySelector('#genericProduct .actions .btn.light'); if (back) back.href = collectionLink();
+
+    const isTalisman = piece.id === 'VIDA 009' || /talisman/i.test(piece.name);
+    const inquiry = document.getElementById('productInquiry');
+    const inquiryTop = document.getElementById('productInquiryTop');
+    const personalized = document.getElementById('productPersonalized');
+    const commission = document.getElementById('productCommission');
+    const back = document.getElementById('productBack');
+    const pieceHref = inquiryLink(piece.name);
+    if (inquiry) { inquiry.href = pieceHref; inquiry.textContent = isTalisman ? 'Inquire About This Talisman' : 'Inquire About This Piece'; }
+    if (inquiryTop) inquiryTop.href = pieceHref;
+    if (personalized) { personalized.href = inquiryLink('A personalized Vida Talisman'); personalized.textContent = isTalisman ? 'Personalize This Talisman' : 'Request a Personalized Version'; }
+    if (commission) commission.href = inquiryLink('A one-of-one custom piece');
+    if (back) back.href = collectionLink();
+
     document.title = `${piece.name} | Vida Collection by Alé`; const description = `${piece.name} — ${piece.story || 'a private fine jewelry piece from Vida Collection by Alé.'}`; const desc = document.querySelector('meta[name="description"]'); if (desc) desc.setAttribute('content', description);
     const canonical = document.getElementById('productCanonical'); if (canonical) canonical.href = `${location.origin}${location.pathname}?id=${encodeURIComponent(piece.id)}`;
     const ogTitle = document.querySelector('meta[property="og:title"]'); if (ogTitle) ogTitle.content = `${piece.name} | Vida Collection by Alé`;
