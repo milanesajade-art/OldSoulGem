@@ -1,53 +1,75 @@
 /* Final presentation layer. Keep core brand tokens in styles.css. */
 html{background:#f2ece3}
 body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-::selection{background:#171411;color:#f7efe5}
+::selection{background:#26342f;color:#f7efe5}
 .site-header{transition:background .25s ease,box-shadow .25s ease}
 .site-header:hover{background:rgba(242,236,227,.97);box-shadow:0 8px 30px rgba(23,20,17,.05)}
 .brand span{font-kerning:normal}
-.btn,.nav-cta,.piece-link,.text-link{transition:transform .2s ease,opacity .2s ease,background .2s ease}
+.btn,.nav-cta,.piece-link,.piece-shop-link,.text-link{transition:transform .2s ease,opacity .2s ease,background .2s ease}
 .btn:hover,.nav-cta:hover{transform:translateY(-1px)}
-.text-link:hover,.piece-link:hover{opacity:.62}
+.text-link:hover,.piece-link:hover,.piece-shop-link:hover{opacity:.62}
 .hero-art,.piece-visual,.product-visual{isolation:isolate}
 .hero-art img,.piece-visual img,.product-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
 .hero-art img{object-position:50% 54%}
-.piece[data-piece-id="VIDA 001"] .piece-visual img{object-position:50% 50%}
-.piece[data-piece-id="VIDA 003"] .piece-visual img{object-position:50% 61%}
-.piece[data-piece-id="VIDA 004"] .piece-visual img{object-position:50% 54%}
-.piece[data-piece-id="VIDA 005"] .piece-visual img{object-position:50% 52%}
 .hero-art:hover img,.piece:hover .piece-visual img{transform:scale(1.018)}
 .piece{transition:transform .3s ease,box-shadow .3s ease}
 .piece:hover{transform:translateY(-3px);box-shadow:0 30px 80px rgba(23,20,17,.13)}
 .visual-number{z-index:4;text-shadow:0 2px 15px rgba(0,0,0,.24)}
-.piece-copy{min-height:275px;display:flex;flex-direction:column;align-items:flex-start}
-.piece-copy .piece-link{margin-top:auto}
+.piece-copy{min-height:305px;display:flex;flex-direction:column;align-items:flex-start}
+.piece-links{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:auto;padding-top:18px}
+.piece-shop-link{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#315c53;text-decoration:none}
 .vida-placeholder{display:grid;place-items:center;text-decoration:none;background:radial-gradient(circle at 50% 35%,#3a3127 0,#211b16 42%,#120f0c 100%);color:#f7efe5;text-align:center;min-height:100%}
 .placeholder-copy{display:grid;gap:8px;padding:28px;position:relative;z-index:2}.placeholder-copy span,.placeholder-copy small{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c6a15f}.placeholder-copy strong{font-family:Georgia,serif;font-size:clamp(28px,4vw,52px);font-weight:400;letter-spacing:.04em}.placeholder-copy small{color:#a99e91}
+.shop-connect{margin:0;padding:64px clamp(22px,6vw,92px);display:grid;grid-template-columns:minmax(0,1.2fr) auto;gap:50px;align-items:center;background:#26342f;color:#f7efe5}
+.shop-connect h2{font-family:Georgia,serif;font-size:clamp(32px,4vw,54px);font-weight:400;line-height:1.04;margin:8px 0 14px}
+.shop-connect p{max-width:760px;color:#d9ddd7;line-height:1.7}
+.shop-connect .eyebrow{color:#d6b479}
+.shop-connect-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}
+.shop-connect .btn.light{background:transparent;color:#f7efe5;border-color:rgba(255,255,255,.42)}
+.collection-end{text-align:center;margin-top:46px}
 .product{min-height:76vh}
 .product-media{min-width:0}
 .product-visual{overflow:hidden;box-shadow:0 28px 80px rgba(23,20,17,.14);background:#ded5c9}
 .product-visual:has(img)::after{display:none!important}
 .product-visual img{min-height:650px}
-.product[data-piece-id="VIDA 003"] .product-visual img{object-position:50% 60%}
-.product[data-piece-id="VIDA 004"] .product-visual img{object-position:50% 53%}
-.product[data-piece-id="VIDA 005"] .product-visual img{object-position:50% 52%}
 .product-visual.vida-placeholder{min-height:650px}
 .product-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
 .product-gallery-button{appearance:none;border:1px solid rgba(23,20,17,.12);padding:0;background:#ded5c9;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
 .product-gallery-button:hover{transform:translateY(-2px)}
-.product-gallery-button.active{border-color:#9c7339;box-shadow:0 0 0 2px rgba(156,115,57,.14)}
+.product-gallery-button.active{border-color:#6b8a7f;box-shadow:0 0 0 2px rgba(107,138,127,.18)}
 .product-gallery-button img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#ded5c9}
-.product-gallery-button:nth-child(3):last-child{grid-column:1/-1}
-.product-gallery-button:nth-child(3):last-child img{aspect-ratio:16/9;object-position:50% 52%}
 .product-copy{padding-top:22px;max-width:690px}
 .product-copy>p:not(.eyebrow):not(.price){color:#625a52;font-size:17px}
 .specs strong{text-align:right}
 .inquire form{position:relative;overflow:hidden}
-.inquire form:before{content:"VIDA • PRIVATE";position:absolute;right:28px;top:14px;font-size:8px;font-weight:800;letter-spacing:.22em;color:#b58b4b}
-input:focus,select:focus,textarea:focus{outline:2px solid rgba(181,139,75,.28);outline-offset:2px;border-color:#b58b4b}
+.inquire form:before{content:"OLD SOUL GEM";position:absolute;right:28px;top:14px;font-size:8px;font-weight:800;letter-spacing:.22em;color:#6a846f}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(80,116,102,.28);outline-offset:2px;border-color:#507466}
 footer{background:rgba(251,248,242,.42)}
+footer a{color:inherit}
 .creator-preview-bar{position:sticky;top:0;z-index:9999;background:#171411;color:#f7efe5;padding:10px 18px;display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:12px;letter-spacing:.02em;border-bottom:1px solid rgba(255,255,255,.1)}
 .creator-preview-bar strong{color:#d9b46f}.creator-preview-actions{display:flex;gap:10px;align-items:center}.creator-preview-actions a,.creator-preview-actions button{color:#f7efe5;background:transparent;border:0;padding:0;font:inherit;text-decoration:underline;cursor:pointer}.has-creator-preview .site-header{top:39px}
+
+.content-section{padding:110px clamp(22px,6vw,92px);background:#f8f3eb}
+.content-intro{max-width:780px;margin-bottom:48px}
+.content-intro h2,.reiki-copy h2{font-family:Georgia,serif;font-size:clamp(40px,6vw,78px);line-height:.98;font-weight:400;margin:10px 0 22px}
+.content-intro>p:last-child,.reiki-copy>p{font-size:17px;line-height:1.8;color:#625a52}
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.guide-card{padding:34px;border:1px solid rgba(23,20,17,.12);border-radius:24px;background:rgba(255,255,255,.46);min-height:260px;display:flex;flex-direction:column}
+.guide-card>span{font-size:10px;letter-spacing:.2em;color:#507466;font-weight:800}
+.guide-card h3{font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1.1;margin:26px 0 14px}
+.guide-card p{color:#625a52;line-height:1.7;margin:auto 0 0}
+.guide-note{max-width:780px;margin:28px 0 0;color:#746b62;font-size:13px;line-height:1.65}
+.reiki-section{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:72px;padding:110px clamp(22px,6vw,92px);background:#dfe4d5;align-items:center}
+.reiki-copy{max-width:760px}
+.reiki-copy .lead{font-family:Georgia,serif;font-size:23px;line-height:1.45;color:#2a2723}
+.reiki-copy .btn{display:inline-block;margin-top:12px}
+.reiki-disclaimer{font-size:13px!important;border-left:2px solid rgba(23,20,17,.28);padding-left:16px;margin:24px 0}
+.reiki-points{display:grid;gap:14px}
+.reiki-points>div{padding:24px;border-radius:20px;background:rgba(255,255,255,.46);border:1px solid rgba(23,20,17,.1)}
+.reiki-points strong,.reiki-points span{display:block}
+.reiki-points strong{font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:8px}
+.reiki-points span{font-size:14px;line-height:1.55;color:#625a52}
+
 @media(min-width:951px){.product-media{position:sticky;top:112px;align-self:start}.has-creator-preview .product-media{top:151px}}
 @media(max-width:950px){
   .site-header{gap:18px;align-items:flex-start}
@@ -56,9 +78,16 @@ footer{background:rgba(251,248,242,.42)}
   nav a{white-space:nowrap;font-size:11px}
   .nav-cta{padding:7px 11px}
   .piece-copy{min-height:0}
-  .piece-copy .piece-link{margin-top:6px}
+  .piece-links{margin-top:14px}
   .product-visual img{min-height:500px}
   .product-visual.vida-placeholder{min-height:500px}
+  .reiki-section{grid-template-columns:1fr;gap:40px}
+  .shop-connect{grid-template-columns:1fr;gap:26px}
+  .shop-connect-actions{justify-content:flex-start}
+}
+@media(max-width:680px){
+  .guide-grid{grid-template-columns:1fr}
+  .guide-card{min-height:0}
 }
 @media(max-width:560px){
   .creator-preview-bar{position:relative;display:block;line-height:1.45}.creator-preview-actions{margin-top:5px}.has-creator-preview .site-header{top:0}
@@ -70,7 +99,6 @@ footer{background:rgba(251,248,242,.42)}
   .hero-art img{min-height:420px!important}
   .piece,.piece-hero{border-radius:22px}
   .piece-visual,.piece-hero .piece-visual{height:360px}
-  .piece[data-piece-id="VIDA 003"] .piece-visual img{object-position:50% 58%}
   .product{padding:34px 20px 80px;gap:34px}
   .product-visual{min-height:0;border-radius:24px}
   .product-visual img{min-height:390px}
@@ -79,4 +107,9 @@ footer{background:rgba(251,248,242,.42)}
   .product-gallery-button{border-radius:14px}
   .specs div{align-items:flex-start}
   .specs strong{max-width:58%}
+  .content-section,.reiki-section{padding:74px 20px}
+  .shop-connect{padding:54px 20px}
+  .shop-connect-actions .btn{width:100%;text-align:center}
+  .content-intro h2,.reiki-copy h2{font-size:44px}
+  .guide-card{padding:26px}
 }

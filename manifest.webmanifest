@@ -1,13 +1,13 @@
 {
-  "name": "Vida Collection by Alé",
-  "short_name": "Vida",
-  "description": "Private fine jewelry by Alé — one-of-one and limited pieces shaped around remarkable stones, sculptural gold, and personal stories.",
+  "name": "Old Soul Gem",
+  "short_name": "Old Soul Gem",
+  "description": "Handmade crystal jewelry, art, vintage finds, crystal guidance, and Reiki from San Antonio, Texas.",
   "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f2ece3",
-  "theme_color": "#11100e",
+  "theme_color": "#26342f",
   "lang": "en-US",
   "dir": "ltr",
   "categories": ["shopping", "lifestyle"],
@@ -22,13 +22,18 @@
   ],
   "shortcuts": [
     {
-      "name": "Collection",
+      "name": "Featured Collection",
       "short_name": "Collection",
       "url": "./#collection"
     },
     {
-      "name": "Private Inquiry",
-      "short_name": "Inquiry",
+      "name": "Crystal Guide",
+      "short_name": "Guide",
+      "url": "./#guide"
+    },
+    {
+      "name": "Contact Old Soul Gem",
+      "short_name": "Contact",
       "url": "./#inquire"
     }
   ]
