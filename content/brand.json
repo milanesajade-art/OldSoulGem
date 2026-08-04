@@ -1,0 +1,41 @@
+{
+  "name": "Old Soul Gem",
+  "shortName": "Old Soul Gem",
+  "tagline": "Meaningful jewelry, crystals, and found treasures.",
+  "positioning": "Handmade and vintage pieces selected or created with intention, artistry, and a love for giving meaningful materials new life.",
+  "tone": [
+    "warm",
+    "earthy",
+    "artistic",
+    "spiritual",
+    "personal",
+    "refined"
+  ],
+  "navigation": [
+    "Home",
+    "Shop",
+    "Our Story",
+    "Sacred Space",
+    "Contact"
+  ],
+  "shopCategories": [
+    "Rings",
+    "Necklaces",
+    "Pendants",
+    "Earrings",
+    "Bracelets",
+    "Suncatchers",
+    "Sacred Space"
+  ],
+  "palette": {
+    "charcoal": "#1d1c19",
+    "forest": "#38423a",
+    "stone": "#b8a58d",
+    "cream": "#f4efe6",
+    "gold": "#b99155"
+  },
+  "sourceLinks": {
+    "etsy": "https://www.etsy.com/shop/OldSoulGemGND",
+    "facebook": "https://www.facebook.com/share/1HM9DEf6BP/"
+  }
+}
