@@ -2,7 +2,7 @@ const COLLECTION_DEFAULTS = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? win
 const SITE_DEFAULTS = window.VIDA_SITE_DEFAULTS || {};
 const PREVIEW_KEY = 'vida_creator_preview_v2';
 const INQUIRY_KEY = 'vida_inquiries';
-const SPECIAL_INTERESTS = ['A personalized Vida Talisman', 'A one-of-one custom piece', 'Private appointment'];
+const SPECIAL_INTERESTS = ['A custom jewelry request', 'Crystal guidance', 'A Reiki session'];
 const readJson = (key) => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
 const esc = (v='') => String(v).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const query = new URLSearchParams(location.search);
@@ -20,17 +20,17 @@ const HERO_FALLBACKS = {
   'VIDA 005': 'assets/braided-gold-band.svg'
 };
 
-function customerStatus(status='Private') {
-  const normalized = String(status || 'Private').trim().toLowerCase();
+function customerStatus(status='Available') {
+  const normalized = String(status || 'Available').trim().toLowerCase();
   if (normalized === 'designer review') return 'Private Preview';
   if (normalized === 'in development') return 'In Development';
   if (normalized === 'coming soon') return 'Coming Soon';
   if (normalized === 'one of one') return 'One of One';
-  return status || 'Private';
+  return status || 'Available';
 }
 
 function placeholderMarkup(piece) {
-  return `<span class="visual-number">${esc(pieceNumber(piece.id))}</span><div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${esc(piece.name)}</strong><small>Imagery in development</small></div>`;
+  return `<span class="visual-number">${esc(pieceNumber(piece.id))}</span><div class="placeholder-copy"><span>OLD SOUL GEM</span><strong>${esc(piece.name)}</strong><small>Photo coming soon</small></div>`;
 }
 function visualMarkup(piece) {
   if (piece.image) return `<a class="piece-visual" href="${productUrl(piece)}" data-piece-id="${esc(piece.id)}"><span class="visual-number">${esc(pieceNumber(piece.id))}</span><img loading="lazy" src="${esc(piece.image)}" alt="${esc(piece.name)}"></a>`;
@@ -41,12 +41,12 @@ function renderHeroVisual() {
   const hero = document.querySelector('.hero-art'); if (!hero) return;
   const pieces = visiblePieces();
   const featured = pieces.find((p) => p.id === 'VIDA 004' && p.image) || pieces.find((p) => p.image);
-  if (!featured) { hero.setAttribute('aria-label','Vida Collection design'); return; }
+  if (!featured) { hero.setAttribute('aria-label','Old Soul Gem jewelry'); return; }
   const img = hero.querySelector('img');
   const caption = hero.querySelector('.art-caption strong');
   if (img) {
     img.src = featured.image;
-    img.alt = `${featured.name} by Vida Collection by Alé`;
+    img.alt = `${featured.name} by Old Soul Gem`;
     img.onerror = () => {
       const fallback = HERO_FALLBACKS[featured.id];
       if (fallback && img.getAttribute('src') !== fallback) {
@@ -59,12 +59,12 @@ function renderHeroVisual() {
     };
   }
   if (caption) caption.textContent = featured.name;
-  hero.setAttribute('aria-label', `${featured.name} by Vida Collection by Alé`);
+  hero.setAttribute('aria-label', `${featured.name} by Old Soul Gem`);
 }
 function renderCollection() {
   const grid = document.querySelector('.collection-grid'); if (!grid) return;
   const pieces = visiblePieces();
-  grid.innerHTML = pieces.map((p,index) => `<article class="piece ${index === 0 ? 'piece-hero' : ''}" data-piece-id="${esc(p.id)}">${visualMarkup(p)}<div class="piece-copy"><div class="piece-top"><p class="eyebrow">${esc(p.id)} • ${esc(customerStatus(p.status).toUpperCase())}</p><span class="price-tag">${esc(p.price || 'Private')}</span></div><h3>${esc(p.name)}</h3><p class="meta">${esc(p.materials || 'Fine jewelry')}</p><p class="piece-story">${esc(p.story || '')}</p><a class="piece-link" href="${productUrl(p)}">Discover the piece →</a></div></article>`).join('');
+  grid.innerHTML = pieces.map((p,index) => `<article class="piece ${index === 0 ? 'piece-hero' : ''}" data-piece-id="${esc(p.id)}">${visualMarkup(p)}<div class="piece-copy"><div class="piece-top"><p class="eyebrow">${esc(p.id)} • ${esc(customerStatus(p.status).toUpperCase())}</p><span class="price-tag">${esc(p.price || 'Ask for availability')}</span></div><h3>${esc(p.name)}</h3><p class="meta">${esc(p.materials || 'Handmade jewelry')}</p><p class="piece-story">${esc(p.story || '')}</p><a class="piece-link" href="${productUrl(p)}">Discover the piece →</a></div></article>`).join('');
   grid.querySelectorAll('.piece-visual img').forEach((img) => img.addEventListener('error', () => { const piece = pieces.find((p) => p.id === img.closest('[data-piece-id]')?.dataset.pieceId); const visual = img.closest('.piece-visual'); if (piece && visual) { visual.classList.add('vida-placeholder'); visual.innerHTML = placeholderMarkup(piece); } }, {once:true}));
 }
 function setText(selector, value) { const el = document.querySelector(selector); if (el && value != null) el.textContent = value; }
@@ -97,7 +97,7 @@ function bindInquiryForm() {
     localStorage.setItem(INQUIRY_KEY, JSON.stringify(saved));
     form.reset();
     renderInterestOptions();
-    if (note) note.textContent = 'Preview inquiry saved locally. Live storefront submissions are emailed directly to Alé.';
+    if (note) note.textContent = 'Preview inquiry saved locally. Live storefront submissions are emailed directly to Alejandra.';
   });
 }
 function renderPreviewBar() {
