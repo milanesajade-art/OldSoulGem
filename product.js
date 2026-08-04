@@ -1,5 +1,6 @@
 (() => {
   const PREVIEW_KEY = 'vida_creator_preview_v2';
+  const ETSY_SHOP = 'https://www.etsy.com/shop/OldSoulGemGND';
   const defaults = Array.isArray(window.VIDA_COLLECTION_DEFAULTS) ? window.VIDA_COLLECTION_DEFAULTS : [];
   const galleries = window.VIDA_PRODUCT_GALLERIES || {};
   const params = new URLSearchParams(location.search);
@@ -13,22 +14,22 @@
   const collectionLink = () => `index.html${previewMode ? '?preview=1' : ''}#collection`;
   const uniqueMedia = (items) => [...new Set(items.filter(Boolean))];
 
-  function customerStatus(status='Private') {
-    const normalized = String(status || 'Private').trim().toLowerCase();
-    if (normalized === 'designer review') return 'Private Preview';
+  function customerStatus(status='Available') {
+    const normalized = String(status || 'Available').trim().toLowerCase();
+    if (normalized === 'on etsy') return 'Available on Etsy';
+    if (normalized === 'custom request') return 'Custom Request';
     if (normalized === 'in development') return 'In Development';
     if (normalized === 'coming soon') return 'Coming Soon';
     if (normalized === 'one of one') return 'One of One';
-    return status || 'Private';
+    return status || 'Available';
   }
 
   function availabilityForPiece(value) {
     const status = String(value?.status || '').trim().toLowerCase();
-    if (status === 'coming soon') return 'Advance inquiry';
-    if (status === 'in development') return 'Available by commission';
-    if (status === 'designer review') return 'Private preview';
-    if (status === 'one of one') return 'Private inquiry';
-    return 'Private inquiry';
+    if (status === 'on etsy') return 'Purchase through Etsy';
+    if (status === 'custom request') return 'Contact Alejandra';
+    if (status === 'coming soon') return 'Ask for an update';
+    return 'Ask for availability';
   }
 
   function galleryForPiece() {
@@ -70,37 +71,59 @@
   function render() {
     const main = document.getElementById('genericProduct');
     if (!piece || piece.visibility === 'hidden') {
-      if (main) main.innerHTML = `<div class="product-copy"><p class="eyebrow">VIDA</p><h1>Piece unavailable</h1><p>This piece is not currently shown in the Vida collection.</p><div class="actions"><a class="btn light" href="${collectionLink()}">Back to Collection</a></div></div>`;
-      document.title = 'Piece unavailable | Vida Collection by Alé'; return;
+      if (main) main.innerHTML = `<div class="product-copy"><p class="eyebrow">OLD SOUL GEM</p><h1>Piece unavailable</h1><p>This piece is not currently shown in the Old Soul Gem collection.</p><div class="actions"><a class="btn light" href="${collectionLink()}">Back to the Collection</a><a class="btn dark" href="${ETSY_SHOP}" target="_blank" rel="noopener noreferrer">Open Etsy Shop</a></div></div>`;
+      document.title = 'Piece unavailable | Old Soul Gem'; return;
     }
     if (main) main.dataset.pieceId = piece.id;
     const displayStatus = customerStatus(piece.status);
-    set('genericEyebrow', `${piece.id} • ${displayStatus.toUpperCase()}`); set('genericName', piece.name); set('genericPrice', piece.price || 'Private'); set('genericStory', piece.story || ''); set('genericMaterials', piece.materials || 'Fine jewelry'); set('genericStatus', displayStatus); set('genericAvailability', availabilityForPiece(piece)); set('genericReference', piece.id); set('genericDesignStory', piece.story || 'This piece is part of the evolving Vida collection.'); set('genericVisualName', piece.name);
+    set('genericEyebrow', `${piece.id} • ${displayStatus.toUpperCase()}`);
+    set('genericName', piece.name);
+    set('genericPrice', piece.price || 'See Etsy');
+    set('genericStory', piece.story || '');
+    set('genericMaterials', piece.materials || 'Crystal jewelry and art');
+    set('genericStatus', displayStatus);
+    set('genericAvailability', availabilityForPiece(piece));
+    set('genericReference', piece.id);
+    set('genericDesignStory', piece.story || 'This piece is part of the evolving Old Soul Gem collection.');
+    set('genericVisualName', piece.name);
     const visual = document.getElementById('genericVisual');
     if (visual && piece.image) {
-      visual.classList.remove('vida-placeholder'); const img = document.createElement('img'); img.src = piece.image; img.alt = piece.name; img.decoding = 'async'; img.loading = 'eager'; img.fetchPriority = 'high'; visual.replaceChildren(img);
-      img.addEventListener('error', () => { visual.classList.add('vida-placeholder'); visual.innerHTML = `<div class="placeholder-copy"><span>VIDA DESIGN STUDY</span><strong>${piece.name.replace(/[<>]/g,'')}</strong><small>Imagery in development</small></div>`; }, {once:true});
+      visual.classList.remove('vida-placeholder');
+      const img = document.createElement('img');
+      img.src = piece.image;
+      img.alt = piece.name;
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.fetchPriority = 'high';
+      visual.replaceChildren(img);
+      img.addEventListener('error', () => {
+        visual.classList.add('vida-placeholder');
+        visual.innerHTML = `<div class="placeholder-copy"><span>OLD SOUL GEM</span><strong>${piece.name.replace(/[<>]/g,'')}</strong><small>View current details on Etsy</small></div>`;
+      }, {once:true});
       renderGallery(visual, img);
     }
 
-    const isTalisman = piece.id === 'VIDA 009' || /talisman/i.test(piece.name);
     const inquiry = document.getElementById('productInquiry');
     const inquiryTop = document.getElementById('productInquiryTop');
     const personalized = document.getElementById('productPersonalized');
-    const commission = document.getElementById('productCommission');
+    const shop = document.getElementById('productShop');
     const back = document.getElementById('productBack');
     const pieceHref = inquiryLink(piece.name);
-    if (inquiry) { inquiry.href = pieceHref; inquiry.textContent = isTalisman ? 'Inquire About This Talisman' : 'Inquire About This Piece'; }
+    if (inquiry) { inquiry.href = pieceHref; inquiry.textContent = 'Ask Alejandra a Question'; }
     if (inquiryTop) inquiryTop.href = pieceHref;
-    if (personalized) { personalized.href = inquiryLink('A personalized Vida Talisman'); personalized.textContent = isTalisman ? 'Personalize This Talisman' : 'Request a Personalized Version'; }
-    if (commission) commission.href = inquiryLink('A one-of-one custom piece');
+    if (personalized) { personalized.href = inquiryLink('A custom jewelry request'); personalized.textContent = 'Request Something Custom'; }
+    if (shop) {
+      shop.href = piece.shopUrl || ETSY_SHOP;
+      shop.textContent = piece.status === 'Custom Request' ? 'Connect Through Linktree' : 'View & Buy on Etsy';
+    }
     if (back) back.href = collectionLink();
 
-    document.title = `${piece.name} | Vida Collection by Alé`; const description = `${piece.name} — ${piece.story || 'a private fine jewelry piece from Vida Collection by Alé.'}`; const desc = document.querySelector('meta[name="description"]'); if (desc) desc.setAttribute('content', description);
+    document.title = `${piece.name} | Old Soul Gem`;
+    const description = `${piece.name} — ${piece.story || 'a crystal jewelry or art piece from Old Soul Gem.'}`;
+    const desc = document.querySelector('meta[name="description"]'); if (desc) desc.setAttribute('content', description);
     const canonical = document.getElementById('productCanonical'); if (canonical) canonical.href = `${location.origin}${location.pathname}?id=${encodeURIComponent(piece.id)}`;
-    const ogTitle = document.querySelector('meta[property="og:title"]'); if (ogTitle) ogTitle.content = `${piece.name} | Vida Collection by Alé`;
+    const ogTitle = document.querySelector('meta[property="og:title"]'); if (ogTitle) ogTitle.content = `${piece.name} | Old Soul Gem`;
     const ogDescription = document.querySelector('meta[property="og:description"]'); if (ogDescription) ogDescription.content = description;
-    if (piece.image) { let ogImage = document.querySelector('meta[property="og:image"]'); if (!ogImage) { ogImage = document.createElement('meta'); ogImage.setAttribute('property','og:image'); document.head.appendChild(ogImage); } ogImage.content = piece.image; }
   }
   document.addEventListener('DOMContentLoaded', render);
 })();
