@@ -1,98 +1,105 @@
 window.VIDA_COLLECTION_DEFAULTS = [
   {
-    "price": "$5,000",
+    "id": "OSG 001",
+    "name": "Wire-Wrapped Crystal Earrings",
+    "status": "On Etsy",
     "visibility": "public",
-    "story": "The opening one-of-one cocktail ring and an anchor of the Vida collection. Flor de Vida is luminous, sculptural, and designed to feel unmistakably personal.",
-    "id": "VIDA 001",
-    "status": "One of One",
-    "image": "https://drive.google.com/thumbnail?id=1STYhz_iuJAu4Yjxh0-z_c2SWWrG1y-_t&sz=w1600",
-    "materials": "14K yellow gold • opal",
-    "name": "Flor de Vida"
+    "price": "$30 on Etsy",
+    "materials": "Rose quartz • clear quartz • amethyst • quartz • wirework",
+    "story": "Handmade dangling earrings that bring together softly colored natural stones and expressive wirework. Each pair celebrates the small variations that make crystal jewelry feel personal.",
+    "image": "assets/old-soul-earrings.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356782794/handmade-wire-wrapped-crystal-earrings"
   },
   {
-    "price": "By Commission",
+    "id": "OSG 002",
+    "name": "Labradorite & Black Agate Pendants",
+    "status": "On Etsy",
     "visibility": "public",
-    "story": "An open star at the ear with an elongated hollow lightning-bolt drop, created as a recognizable Vida signature. Graphic, light, and distinctive, it balances playful energy with a refined finish.",
-    "id": "VIDA 002",
-    "status": "In Development",
-    "image": "",
-    "materials": "10K or 14K yellow gold • openwork drop earring",
-    "name": "Star / Bolt"
+    "price": "$22.50 on Etsy",
+    "materials": "Labradorite • black agate • natural-stone charm",
+    "story": "Natural-stone pendants selected for their depth, contrast, and individual character. Designed to be worn as a meaningful everyday charm or layered with other favorites.",
+    "image": "assets/old-soul-pendant.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356839510/crystal-pendant-labradorite-black-agate"
   },
   {
-    "price": "Private Pricing",
+    "id": "OSG 003",
+    "name": "Root-to-Crown Chakra Bracelets",
+    "status": "On Etsy",
     "visibility": "public",
-    "story": "A luminous opal surrounded by an asymmetrical floral burst of color and flowing goldwork. Luz de Alé is expressive, feminine, and intended to remain one of one.",
-    "id": "VIDA 003",
-    "status": "Designer Review",
-    "image": "https://drive.google.com/thumbnail?id=1RHhwrEkBw-TBh-aBR0pOJJdx49PDeWJb&sz=w1600",
-    "materials": "14K yellow gold • white opal • multicolor accents",
-    "name": "Luz de Alé"
+    "price": "$21 on Etsy",
+    "materials": "Intuitively selected stones • chakra-inspired color collection",
+    "story": "A root-to-crown bracelet collection arranged around color, symbolism, and personal intention. Choose the bracelet that speaks to the season or energy you are exploring.",
+    "image": "assets/old-soul-bracelet.svg",
+    "shopUrl": "https://www.etsy.com/listing/4442388030/chakra-bracelet-collection-root-to-crown"
   },
   {
-    "price": "Private Pricing",
+    "id": "OSG 004",
+    "name": "Crystal Chain Earrings",
+    "status": "On Etsy",
     "visibility": "public",
-    "story": "A celestial black-opal composition framed by orbital arcs, gemstone points, and cosmic detail. Órbita captures the imaginative, symbolic side of the Vida point of view.",
-    "id": "VIDA 004",
-    "status": "Designer Review",
-    "image": "https://drive.google.com/thumbnail?id=1-5tVLig0R4tZ_8RcpMcTnMIWPb7avkWj&sz=w1600",
-    "materials": "14K yellow gold • black opal • colored gemstone accents",
-    "name": "Órbita"
+    "price": "$30 on Etsy",
+    "materials": "Rose quartz • smoky quartz • obsidian • sterling-silver chain",
+    "story": "Long, lightweight crystal earrings combining soft rose quartz, smoky depth, and obsidian contrast on a delicate chain silhouette.",
+    "image": "assets/old-soul-earrings.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356797708/handmade-crystal-dangling-earrings-rose"
   },
   {
-    "price": "Coming Soon",
+    "id": "OSG 005",
+    "name": "Natural Crystal Suncatcher",
+    "status": "On Etsy",
     "visibility": "public",
-    "story": "A continuous interwoven band with rounded polished strands and visible openings, exploring connection, movement, and sculptural simplicity through the Vida design language.",
-    "id": "VIDA 005",
-    "status": "Coming Soon",
-    "image": "https://drive.google.com/thumbnail?id=1FA4GqgSnIixn2i2gXGOV8CrwGIO4FzkK&sz=w1600",
-    "materials": "14K yellow gold • two-strand interwoven band • open negative space",
-    "name": "Entrelazado"
+    "price": "$21 on Etsy",
+    "materials": "Natural crystals • glass • metal • hanging decor",
+    "story": "A handmade suncatcher for a window, reading corner, altar, or other meaningful space. Natural stones and reflective elements bring light, movement, and color into the room.",
+    "image": "assets/old-soul-suncatcher.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356903799/handmade-crystal-suncatcher-natural"
   },
   {
-    "price": "Private",
-    "visibility": "hidden",
-    "story": "A light sculptural ring direction built around a graceful looping gold form.",
-    "id": "VIDA 006",
-    "status": "Designer Review",
-    "image": "",
-    "materials": "14K yellow gold • gemstone center",
-    "name": "Lazo de Luz"
+    "id": "OSG 006",
+    "name": "Handmade & Thrifted Crystal Necklaces",
+    "status": "On Etsy",
+    "visibility": "public",
+    "price": "$11.25 on Etsy",
+    "materials": "Clay • hematite • crystal details • layered vintage components",
+    "story": "Layered statement necklaces combining handmade details with thoughtfully thrifted elements. This collection reflects Old Soul Gem's belief in giving meaningful materials a new life.",
+    "image": "assets/old-soul-pendant.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356886717/handmade-thrifted-crystal-necklaces-clay"
   },
   {
-    "price": "Private",
-    "visibility": "hidden",
-    "story": "A more architectural interpretation of the interwoven Vida language for a statement ring.",
-    "id": "VIDA 007",
-    "status": "Designer Review",
-    "image": "",
-    "materials": "14K yellow gold",
-    "name": "Lazo Eterno"
+    "id": "OSG 007",
+    "name": "Sculptural Clay Crystal Talisman",
+    "status": "On Etsy",
+    "visibility": "public",
+    "price": "$24 on Etsy",
+    "materials": "Hand-shaped clay • crystal • sterling-silver chain",
+    "story": "A one-of-a-kind sculptural pendant that brings crystal, clay, and wearable art together as a small ritual object and personal talisman.",
+    "image": "assets/old-soul-incense.svg",
+    "shopUrl": "https://www.etsy.com/listing/4402644242/handmade-clay-crystal-pendant-sculptural"
   },
   {
-    "price": "Private",
-    "visibility": "hidden",
-    "story": "A bold color-led statement piece exploring heat, movement, and paired forms.",
-    "id": "VIDA 008",
-    "status": "Designer Review",
-    "image": "",
-    "materials": "14K yellow gold • warm-toned gemstones",
-    "name": "Fuego Unido"
+    "id": "OSG 008",
+    "name": "Vintage Sterling-Silver Crystal Rings",
+    "status": "On Etsy",
+    "visibility": "public",
+    "price": "$30 on Etsy",
+    "materials": "925 sterling silver • assorted natural stones • vintage find",
+    "story": "A rotating collection of vintage sterling-silver rings in assorted crystal colors. Each ring has its own shape, patina, stone character, and history.",
+    "image": "assets/old-soul-ring.svg",
+    "shopUrl": "https://www.etsy.com/listing/4356841138/vintage-925-sterling-silver-crystal"
   },
   {
-    "price": "From $650",
-    "visibility": "hidden",
-    "story": "A personal talisman created around a milestone, memory, birthstone, or meaningful symbol. Vida Talisman No. 1 offers an intimate entry into the collection while preserving its sculptural goldwork and gemstone-led identity.",
-    "id": "VIDA 009",
-    "status": "Coming Soon",
-    "image": "",
-    "materials": "14K yellow gold • opal or birthstone center • talisman pendant",
-    "name": "Vida Talisman No. 1"
+    "id": "OSG 009",
+    "name": "Custom Intention Piece",
+    "status": "Custom Request",
+    "visibility": "public",
+    "price": "Ask Alejandra",
+    "materials": "Selected stones • handmade or curated components • personal direction",
+    "story": "Begin with a color, crystal, memory, milestone, or intention. Custom requests are developed through conversation and depend on stone and material availability.",
+    "image": "assets/old-soul-bracelet.svg",
+    "shopUrl": "https://linktr.ee/oldsoulgem"
   }
 ];
 
-// Preserve the established accessible placeholder while allowing the inquiry
-// choices themselves to be expanded by app.js.
 function normalizeVidaInterestPlaceholder() {
   const select = document.getElementById('interestSelect');
   const placeholder = select?.querySelector('option[value=""]');
