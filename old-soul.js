@@ -96,7 +96,7 @@
     const announcement = document.querySelector('.announcement');
     if (announcement) {
       announcement.innerHTML = `
-        <p><strong>Direct website checkout is being added.</strong> Reserve a piece here now and complete card payment through a secure Stripe checkout link. Etsy remains available as an optional backup.</p>
+        <p><strong>Shop directly with Old Soul Gem.</strong> Reserve a piece here, then complete card payment through a secure Stripe checkout link. Etsy remains available as an optional backup.</p>
         <a href="#shop">Shop direct ↓</a>`;
     }
 
@@ -179,7 +179,7 @@
       stripeLink.hidden = false;
       orderForm.hidden = true;
     } else {
-      if (note) note.textContent = 'Direct card processing is being connected. Submit this short reservation and Old Soul Gem will send the secure payment link directly.';
+      if (note) note.textContent = 'Submit this short checkout request and Old Soul Gem will confirm availability and send the secure payment link directly.';
       stripeLink.hidden = true;
       stripeLink.removeAttribute('href');
       orderForm.hidden = false;
@@ -197,6 +197,18 @@
       if (!product || !bottom) return;
 
       card.dataset.directProductId = product.id;
+      const cardLinks = [card.querySelector('.product-image'), card.querySelector('h3 a')].filter(Boolean);
+      cardLinks.forEach((link) => {
+        link.href = '#shop';
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+        link.setAttribute('aria-label', `${product.name} — open direct checkout`);
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          openCheckout(product);
+        });
+      });
+
       const originalLink = bottom.querySelector('a');
       const etsyUrl = originalLink?.href || product.etsyUrl;
       product.etsyUrl = etsyUrl;
