@@ -1,0 +1,156 @@
+{
+  "source": {
+    "shopName": "OldSoulGemGND",
+    "displayName": "Old Soul Gem",
+    "platform": "Etsy",
+    "shopUrl": "https://www.etsy.com/shop/OldSoulGemGND",
+    "checkedOn": "2026-08-04",
+    "note": "Initial storefront source catalog. Product imagery, exact variants, inventory, and final pricing should be refreshed from the live listings before launch."
+  },
+  "brandThemes": [
+    "energy",
+    "art",
+    "intention",
+    "crystals",
+    "self-connection",
+    "inner peace",
+    "handmade objects",
+    "vintage finds",
+    "recycling and giving meaningful objects new life"
+  ],
+  "shopCategories": [
+    "Pendants",
+    "Rings",
+    "Suncatchers",
+    "Earrings",
+    "Bracelets",
+    "Necklaces",
+    "Sacred Space"
+  ],
+  "products": [
+    {
+      "title": "Handmade Crystal Suncatchers",
+      "category": "Suncatchers",
+      "materials": "Natural crystals, glass, and metal",
+      "salePrice": 21.00,
+      "originalPrice": 28.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Handmade & Thrifted Crystal Necklaces",
+      "category": "Necklaces",
+      "materials": "Clay, hematite, and layered found elements",
+      "salePrice": 11.25,
+      "originalPrice": 15.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Handmade Clay Crystal Pendant",
+      "category": "Pendants",
+      "materials": "Sculptural clay, crystal, and sterling silver chain",
+      "salePrice": 24.00,
+      "originalPrice": 32.00,
+      "currency": "USD",
+      "oneOfOne": true
+    },
+    {
+      "title": "Vintage 925 Sterling Silver Crystal Rings — Assorted Colors",
+      "category": "Rings",
+      "materials": "925 sterling silver and crystal",
+      "salePrice": 30.00,
+      "originalPrice": 40.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Vintage 925 Sterling Silver Crystal Rings — Assorted Colors",
+      "category": "Rings",
+      "materials": "925 sterling silver and crystal",
+      "salePrice": 30.00,
+      "originalPrice": 40.00,
+      "currency": "USD",
+      "variantGroup": "Assorted color ring listing"
+    },
+    {
+      "title": "Handmade Wire-Wrapped Crystal Earrings",
+      "category": "Earrings",
+      "materials": "Rose quartz, clear quartz, amethyst, quartz, and wire",
+      "salePrice": 30.00,
+      "originalPrice": 40.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Found by the Sea Bracelet Set",
+      "category": "Bracelets",
+      "materials": "Shells, crystals, and stacked bracelet elements",
+      "salePrice": 33.75,
+      "originalPrice": 45.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Chakra Bracelet Collection — Root to Crown",
+      "category": "Bracelets",
+      "materials": "Intuitively selected stones",
+      "salePrice": 21.00,
+      "originalPrice": 28.00,
+      "currency": "USD"
+    },
+    {
+      "title": "925 Sterling Silver Dainty Chain Necklace",
+      "category": "Necklaces",
+      "materials": "925 sterling silver",
+      "salePrice": 13.50,
+      "originalPrice": 18.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Crystal Pendants — Labradorite & Black Agate",
+      "category": "Pendants",
+      "materials": "Labradorite, black agate, and natural-stone charm components",
+      "salePrice": 22.50,
+      "originalPrice": 30.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Vintage 925 Sterling Silver Crystal Rings — Assorted Colors",
+      "category": "Rings",
+      "materials": "925 sterling silver and crystal",
+      "salePrice": 22.50,
+      "originalPrice": 30.00,
+      "currency": "USD",
+      "variantGroup": "Assorted color ring listing"
+    },
+    {
+      "title": "Handmade Crystal Dangling Earrings",
+      "category": "Earrings",
+      "materials": "Rose quartz, smoky quartz, obsidian, and sterling silver chain",
+      "salePrice": 30.00,
+      "originalPrice": 40.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Crystal Pendants — Natural Stone Charms",
+      "category": "Pendants",
+      "materials": "Natural stone charms",
+      "salePrice": 16.50,
+      "originalPrice": 22.00,
+      "currency": "USD"
+    },
+    {
+      "title": "Crystal Pendants — Natural Stone Charms",
+      "category": "Pendants",
+      "materials": "Natural stone charms",
+      "salePrice": 16.50,
+      "originalPrice": 22.00,
+      "currency": "USD",
+      "variantGroup": "Natural stone charm listing"
+    },
+    {
+      "title": "Handmade Clay & Crystal Incense Holder",
+      "category": "Sacred Space",
+      "materials": "Clay and crystal",
+      "salePrice": 22.50,
+      "originalPrice": 30.00,
+      "currency": "USD"
+    }
+  ]
+}
