@@ -1,9 +1,8 @@
 (() => {
-  const images = window.OSG_IMAGES || {};
-  document.querySelectorAll('img[data-img]').forEach((img) => {
-    const src = images[img.dataset.img];
-    if (src) img.src = src;
-  });
+  const spriteStyles = document.createElement('link');
+  spriteStyles.rel = 'stylesheet';
+  spriteStyles.href = 'ring-sprite.css?v=1';
+  document.head.appendChild(spriteStyles);
 
   const menuButton = document.querySelector('.menu-button');
   const nav = document.querySelector('#site-nav');
@@ -31,10 +30,15 @@
 
   document.querySelectorAll('[data-lightbox]').forEach((button) => {
     button.addEventListener('click', () => {
-      const src = images[button.dataset.lightbox];
-      if (!lightbox || !lightboxImage || !src) return;
-      lightboxImage.src = src;
-      lightboxImage.alt = button.querySelector('img')?.alt || 'Expanded product view';
+      const source = button.querySelector('img[data-img]');
+      if (!lightbox || !lightboxImage || !source) return;
+      const style = getComputedStyle(source);
+      lightboxImage.removeAttribute('src');
+      lightboxImage.style.backgroundImage = style.backgroundImage;
+      lightboxImage.style.backgroundSize = style.backgroundSize;
+      lightboxImage.style.backgroundPosition = style.backgroundPosition;
+      lightboxImage.style.backgroundRepeat = 'no-repeat';
+      lightboxImage.alt = source.alt || 'Expanded product view';
       lightbox.classList.add('open');
       lightbox.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lightbox-open');
