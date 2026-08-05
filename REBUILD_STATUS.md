@@ -1,0 +1,1 @@
+Clean storefront rebuild in progress. The image sprite system is being removed and replaced with direct image files.
