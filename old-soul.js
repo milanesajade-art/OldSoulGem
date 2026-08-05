@@ -1,8 +1,22 @@
 (() => {
-  const spriteStyles = document.createElement('link');
-  spriteStyles.rel = 'stylesheet';
-  spriteStyles.href = 'ring-sprite.css?v=1';
-  document.head.appendChild(spriteStyles);
+  const photoFix = document.createElement('style');
+  photoFix.textContent = `
+    img[data-img]{
+      background-size:300% 300%!important;
+      background-repeat:no-repeat!important;
+      background-color:#e8e4dc;
+    }
+    img[data-img="ring-green-halo.webp"]{background-position:0% 0%!important}
+    img[data-img="ring-crystal-cluster.webp"]{background-position:50% 0%!important}
+    img[data-img="ring-blue-halo.webp"]{background-position:100% 0%!important}
+    img[data-img="ring-peridot-rope.webp"]{background-position:0% 50%!important}
+    img[data-img="detail-peridot-scale.webp"]{background-position:50% 50%!important}
+    img[data-img="detail-blue-scale.webp"]{background-position:100% 50%!important}
+    img[data-img="detail-cluster-profile.webp"]{background-position:0% 100%!important}
+    img[data-img="ring-edit-overview.webp"]{background-position:50% 100%!important}
+    img[data-img="old-soul-storefront.webp"]{background-position:100% 100%!important}
+  `;
+  document.head.appendChild(photoFix);
 
   const menuButton = document.querySelector('.menu-button');
   const nav = document.querySelector('#site-nav');
