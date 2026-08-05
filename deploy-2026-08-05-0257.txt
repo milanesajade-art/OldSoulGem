@@ -1,0 +1,1 @@
+Trigger GitHub Pages deployment after repository rename and source confirmation.
